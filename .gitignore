@@ -1,16 +1,20 @@
 
 # Compiled Data
+.vs/ThirdPartyAnimal/v17
 3PA.API/bin/
 3PA.API/obj/
 3PA.API/Properties/
 3PA.API/appseetings.json
 3PA.API.Services/bin/
 3PA.API.Services/obj/
+3PA.Data.Sql/bin/
+3PA.Data.Sql/obj/
+3PA.Core/bin/
+3PA.Core/obj/
 
 # Projects not yet shared
 3PA.Console/
 3PA.Console.Services/
-3PA.Core/
 3PA.Data/
 3PA.Logic/
 3PA.Resources/
@@ -55,4 +59,4 @@ nuget.exe
 *.mov
 *.wmv
 *.pdb
-/.vs/ThirdPartyAnimal/v17
+.vs/
