@@ -8,7 +8,7 @@ namespace _3PA.Core.Models.Fl
   {
     [Key]
     public string VoterId { get; set; }
-    public string CountyCode { get; set; }    
+    public string CountyCode { get; set; }
     public string? NameLast { get; set; }
     public string? NameSuffix { get; set; }
     public string? NameFirst { get; set; }
@@ -47,6 +47,8 @@ namespace _3PA.Core.Models.Fl
     public string? EmailAddress { get; set; }
     #region Concerning EF...
     public FlVoter() { }
+    //EF Core collection navigation property
+    public ICollection<FlHistoryActive> Histories {get;set;}
     #endregion ...EF
 
     public FlVoter(string row)
