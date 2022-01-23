@@ -24,7 +24,7 @@ namespace _3PA.Data.Sql.Fl
     {
       var tally = new tallyHelper(publicRecords.Count());
       Console.WriteLine($"Processing {tally.Goal.ToString("N0")} records...");
-      Console.WriteLine("{0,-15}{1,-20}{2,20}", "COUNT", "DURATION", "PROJECTION");
+      Console.WriteLine("{0,-15}{1,-15}{2,-20}{3,20}", "UPDATED", "PROCESSED", "DURATION", "PROJECTION");
 
       foreach (var x in publicRecords)
       {
@@ -39,10 +39,22 @@ namespace _3PA.Data.Sql.Fl
         }
         else
         {
-          var existingId = _context.Histories.FirstOrDefault(exists => exists.Id == (x as FlHistory).Id);
-          if (existingId == null)
+          //Check if this history is new...
+          var existingId = _context.Histories.FirstOrDefault(exists => exists.Id == (x as FlHistory).Id) != null;
+          if (!existingId)
           {
-            await _context.Histories.AddAsync(x as FlHistory);
+            //Check if this history is an orphan...
+            var existingVoter = _context.Voters.FirstOrDefault(exists => exists.VoterId == (x as FlHistory).VoterId);
+            if(existingVoter != null)
+            {
+                var h = new FlHistoryActive(existingVoter, (x as FlHistory));
+                await _context.Histories.AddAsync(h);              
+            }
+            else
+            {
+                var h = new FlHistoryOrphan(x as FlHistory);
+                await _context.OrphanHistories.AddAsync(h);
+            }
             tally.Updates++;
           }
         }
@@ -65,29 +77,19 @@ namespace _3PA.Data.Sql.Fl
         tally.UpdateTime.Elapsed.TotalSeconds,
         tally.TotalTime.Elapsed.TotalSeconds
        );
-      /*
-            Console.WriteLine("DATABASE SUMMARY:");
-            var vCount = _context.Voters
-                  .Where(o => o.VoterId != null)
-                  .SelectMany(o => o.VoterId)
-                  .Count();
-            var hCount = _context.Histories
-                  .Where(o => o.Id != null)
-                  .SelectMany(o => o.Id)
-                  .Count();
-            Console.WriteLine($"{vCount} total voters with {hCount} histories.");
-      */
       return tally.Updates;
     }
 
     void updateIncrementally(int progress, int goal, double updateTime, double totalTime)
     {
-      _context.SaveChanges();
+
+      var currentUpdates = _context.SaveChanges();
       var timePer = updateTime / 10_000;
       var timeLeft = (timePer * (goal - progress));
       var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
 
-      Console.WriteLine("{0,-15}{1,-20}{2,20}",
+      Console.WriteLine("{0,-15}{1,-15}{2,-20}{3,20}",
+          currentUpdates,
           progress.ToString("N0"),
           $"{Math.Round(totalTime, 2)}\t({Math.Round(updateTime, 2)}/10k)",
           estTimeCompleted

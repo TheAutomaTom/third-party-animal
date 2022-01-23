@@ -29,7 +29,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
           else
           {
             var list = repo.ReadHistories(rawText);
-            updated = repo.CommitRecords<FlHistory>(list).Result;
+            updated = repo.CommitRecords<FlHistoryActive>(list).Result;
           }          
           break;
         case "NC":
