@@ -17,7 +17,7 @@ namespace _3PA.API.Services.PublicRecords.Conventions.Queries
           break;
 */
         default: //FL
-          _geoData = new MetaFlGeoData();
+          _geoData = new FlGeoData();
           request.CountyCode = request.CountyCode.ToUpper();
           break;
       }

@@ -8,7 +8,7 @@ namespace _3PA.Data.Sql.Fl
   {
     public DbSet<FlVoter> Voters { get; set; }
     public DbSet<FlHistory> Histories { get; set; }
-    public string catalog => "Raw.FL2";
+    public string catalog => "Raw.Fl";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

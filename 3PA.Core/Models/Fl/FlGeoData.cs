@@ -1,10 +1,12 @@
 ﻿namespace _3PA.Core.Models.Fl
 {
-  public class MetaFlGeoData : IGeoData
+  public class FlGeoData : IGeoData
   {
-    public static string FileSuffix => ".txt";
-    public static char Delimiter => '\t';
-    public static int CountyIdStartPosition => 1;
+    public override char Delimiter => '\t';
+    public override string FileSuffix => ".txt";
+    public override int CountyIdStartPosition => 1;
+    public virtual int CountyIdMaxLength => 3;
+    public override bool KeyIsInt => false; 
     public override Dictionary<string, string> CountyIds 
       => new Dictionary<string, string>
       {

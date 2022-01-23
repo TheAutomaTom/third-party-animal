@@ -1,12 +1,12 @@
 ﻿using _3PA.Core.Models;
 using _3PA.Core.Models.Fl;
-using Microsoft.EntityFrameworkCore;
+using _3PA.Data.Sql.Core;
+using _3PA.Data.Sql.Core.Interfaces;
 using System.Data;
-using System.Diagnostics;
 
 namespace _3PA.Data.Sql.Fl
 {
-  public class FlRepository //: IPublicRecordsConsumerRepository
+  public class FlRepository : IPublicRecordsRepository
   {
     FlDbContext _context { get; set; }
     IGeoData _geoData { get; set; }
@@ -14,11 +14,11 @@ namespace _3PA.Data.Sql.Fl
     {
       _context = new FlDbContext();
       _context.Database.EnsureCreated();
-      _geoData = new MetaFlGeoData();
+      _geoData = new FlGeoData();
     }
 
-    public IEnumerable<FlVoter> ReadAsVoters(string[] list) => list.Select(v => new FlVoter(v)).ToList();
-    public IEnumerable<FlHistory> ReadAsHistories(string[] list) => list.Select(v => new FlHistory(v)).ToList();
+    public IEnumerable<object> ReadVoters(string[] list) => list.Select(v => new FlVoter(v)).ToList();
+    public IEnumerable<object> ReadHistories(string[] list) => list.Select(v => new FlHistory(v)).ToList();
 
     public async Task<int> CommitRecords<T>(IEnumerable<object> publicRecords) where T : class
     {
@@ -47,11 +47,11 @@ namespace _3PA.Data.Sql.Fl
           }
         }
         tally.Progress++;
-        if ( (tally.Updates > 0) && (tally.Updates % 10000 == 0) )
+        if ((tally.Updates > 0) && (tally.Updates % 10000 == 0))
         {
           updateIncrementally(
-            tally.Progress, 
-            tally.Goal, 
+            tally.Progress,
+            tally.Goal,
             tally.UpdateTime.Elapsed.TotalSeconds,
             tally.TotalTime.Elapsed.TotalSeconds
            );
@@ -93,34 +93,10 @@ namespace _3PA.Data.Sql.Fl
           estTimeCompleted
         );
     }
-  }
 
-  class tallyHelper
-  {
-    public tallyHelper(int goal, bool start = true)
-    {
-      Goal = goal;
-      TotalTime = new Stopwatch();
-      UpdateTime = new Stopwatch();
-      if (start)
-      {
-        TotalTime.Start();
-        UpdateTime.Start();
-      }
-    }
-    public int Goal { get; set; }
-    public int Progress { get; set; }
-    public int Updates { get; set; }
-    public Stopwatch TotalTime { get; set; }
-    public Stopwatch UpdateTime { get; set; }
-    public void EndTimers()
-    {
-      TotalTime.Stop();  
-      UpdateTime.Stop();
-      Console.Beep();
-    }
   }
 }
+
 
 
 
