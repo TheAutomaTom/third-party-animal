@@ -3,9 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _3PA.Core.Models.Fl
 {
-  [Table("Histories")]
   public class FlHistory
   {
+    #region Concerning EF...
+    //foreign key already present in public records entity
+    //public string VoterId { get; set; } 
+    public FlHistory() { }
+    #endregion ...EF
+
     [Key]
     public string Id { get; set; }
     public string VoterId { get; set; }
@@ -14,9 +19,6 @@ namespace _3PA.Core.Models.Fl
     public string? ElectionType { get; set; }
     public string? HistoryCode { get; set; }
 
-    #region Concerning EF...
-    public FlHistory() { }
-    #endregion ...EF
 
     public FlHistory(string row)
     {
