@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models.Fl
 {
-  public class MetaFlVoter : IPublicRecordEntryConfig
+  public class FlVoterConfig : IPublicRecordEntryConfig
   {
     public static string PathSuffix => "_VoterDetail";
     public static string[] Headers =>

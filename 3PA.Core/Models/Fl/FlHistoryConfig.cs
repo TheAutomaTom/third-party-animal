@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models.Fl
 {
-  public class MetaFlHistory : IPublicRecordEntryConfig
+  public class FlHistoryConfig : IPublicRecordEntryConfig
   {
     public static string PathSuffix => "_VoterHistory";
     public static string[] Headers =>

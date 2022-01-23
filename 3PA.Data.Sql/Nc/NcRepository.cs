@@ -1,24 +1,37 @@
 ﻿using _3PA.Core.Models;
-using _3PA.Core.Models.Fl;
+using _3PA.Core.Models.Nc;
 using _3PA.Data.Sql.Core;
 using _3PA.Data.Sql.Core.Interfaces;
-using System.Data;
 
-namespace _3PA.Data.Sql.Fl
+namespace _3PA.Data.Sql.Nc
 {
-  public class FlRepository : IPublicRecordsRepository
+  public class NcRepository : IPublicRecordsRepository
   {
-    FlDbContext _context { get; set; }
+    NcDbContext _context { get; set; }
     IGeoData _geoData { get; set; }
-    public FlRepository()
+    public NcRepository()
     {
-      _context = new FlDbContext();
+      _context = new NcDbContext();
       _context.Database.EnsureCreated();
-      _geoData = new FlGeoData();
+      _geoData = new NcGeoData();
     }
 
-    public IEnumerable<object> ReadVoters(string[] list) => list.Select(v => new FlVoter(v)).ToList();
-    public IEnumerable<object> ReadHistories(string[] list) => list.Select(v => new FlHistory(v)).ToList();
+    public IEnumerable<object> ReadVoters(string[] raw)
+    {
+      var list = sanitizeInput(raw, 1 /*71*/ );
+      var toReturn = list.Select(v => new NcVoter(v)).ToList();
+      return toReturn;
+
+    }
+      
+    public IEnumerable<object> ReadHistories(string[] list) =>
+      sanitizeInput(list, 15).Select(v => new NcHistory(v)).ToList();
+    string[] sanitizeInput(string[] listWithHeaders, int headerCount)
+    {
+      var withoutHeaders = listWithHeaders.Skip(headerCount).ToArray();
+      var withoutQuotes = withoutHeaders.Select(s => s.Replace("\"","")).ToArray();
+      return withoutQuotes;
+    }      
 
     public async Task<int> CommitRecords<T>(IEnumerable<object> publicRecords) where T : class
     {
@@ -28,21 +41,21 @@ namespace _3PA.Data.Sql.Fl
 
       foreach (var x in publicRecords)
       {
-        if (typeof(T).Name == nameof(FlVoter))
+        if (typeof(T).Name == nameof(NcVoter))
         {
-          var existingId = _context.Voters.FirstOrDefault(exists => exists.VoterId == (x as FlVoter).VoterId);
+          var existingId = _context.Voters.FirstOrDefault(exists => exists.VoterRegNum == (x as NcVoter).VoterRegNum);
           if (existingId == null)
           {
-            await _context.Voters.AddAsync(x as FlVoter);
+            await _context.Voters.AddAsync(x as NcVoter);
             tally.Updates++;
           }
         }
         else
         {
-          var existingId = _context.Histories.FirstOrDefault(exists => exists.Id == (x as FlHistory).Id);
+          var existingId = _context.Histories.FirstOrDefault(exists => exists.Id == (x as NcHistory).Id);
           if (existingId == null)
           {
-            await _context.Histories.AddAsync(x as FlHistory);
+            await _context.Histories.AddAsync(x as NcHistory);
             tally.Updates++;
           }
         }
@@ -65,18 +78,7 @@ namespace _3PA.Data.Sql.Fl
         tally.UpdateTime.Elapsed.TotalSeconds,
         tally.TotalTime.Elapsed.TotalSeconds
        );
-      /*
-            Console.WriteLine("DATABASE SUMMARY:");
-            var vCount = _context.Voters
-                  .Where(o => o.VoterId != null)
-                  .SelectMany(o => o.VoterId)
-                  .Count();
-            var hCount = _context.Histories
-                  .Where(o => o.Id != null)
-                  .SelectMany(o => o.Id)
-                  .Count();
-            Console.WriteLine($"{vCount} total voters with {hCount} histories.");
-      */
+
       return tally.Updates;
     }
 
@@ -96,25 +98,3 @@ namespace _3PA.Data.Sql.Fl
 
   }
 }
-
-
-
-
-
-/*    public void PrintSummary(DbContextBase context)
-    {
-      Console.ResetColor();
-      Console.WriteLine($"DATABASE SUMMARY:");
-
-
-
-
-
-      var dCount = context.Details.FromSqlRaw("SELECT COUNT(*) FROM dbo.Details");
-      var hCount = context.Histories.FromSqlRaw("SELECT COUNT(*) FROM dbo.Histories");
-
-
-      Console.WriteLine($"{dCount} Voters with {hCount} histories.");
-
-
-    }*/

@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models
 {
-  public enum Kind
+  public enum Category
   {
     Voter,
     History

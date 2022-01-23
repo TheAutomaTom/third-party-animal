@@ -21,9 +21,9 @@ namespace _3PA.API.Controllers.PublicRecords
     ///<param name="file">Publicly available voter data file</param>
     /// <response code="200">Returns count of rows added to local db.</response>
     /// <response code="400">If there are errors completing the task</response>
-    [HttpPost("sql/save/{state}/{kind}-file")]
+    [HttpPost("sql/from-public-records/{state}/{category}-file")]
     [RequestSizeLimit(bytes: 500_000_000)]
-    public async Task<ActionResult> ReadFileToSql(SupportedUsStates state, Kind kind, IFormFile file)
+    public async Task<ActionResult> ReadFileToSql(SupportedUsStates state, Category category, IFormFile file)
     {
       try
       {
@@ -45,7 +45,7 @@ namespace _3PA.API.Controllers.PublicRecords
             await file.CopyToAsync(filestream);
             filestream.Close();
           }
-          return Ok(_mediator.Send(new ReadFileToSqlRequest(state, kind, originalName, tempPath)));
+          return Ok(_mediator.Send(new ReadFileToSqlRequest(state, category, originalName, tempPath)));
         }
         return BadRequest();
 

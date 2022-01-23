@@ -1,20 +1,19 @@
-﻿using _3PA.Core.Models.Fl;
+﻿using _3PA.Core.Models.Nc;
 using _3PA.Data.Sql.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace _3PA.Data.Sql.Fl
+namespace _3PA.Data.Sql.Nc
 {
-  public class FlDbContext : DbContextBase
+  public class NcDbContext : DbContextBase
   {
-    public DbSet<FlVoter> Voters { get; set; }
-    public DbSet<FlHistory> Histories { get; set; }
-    public string catalog => "Raw.Fl";
+    public DbSet<NcVoter> Voters { get; set; }
+    public DbSet<NcHistory> Histories { get; set; }
+    public string catalog => "Raw.Nc";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       optionsBuilder.UseSqlServer($"{base.basePath}{catalog}");
     }
-
 
   }
 }
