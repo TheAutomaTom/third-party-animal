@@ -1,10 +1,12 @@
-﻿namespace _3PA.Data.Sql.Core.Interfaces
+﻿using _3PA.Core.Models;
+
+namespace _3PA.Data.Sql.Core.Interfaces
 {
   public interface IPublicRecordsRepository
   {
-    public IEnumerable<object> ReadVoters(string[] list);
-    public IEnumerable<object> ReadHistories(string[] list);
-    public Task<int> CommitRecords<T>(IEnumerable<object> publicRecords) where T : class;
+    public IEnumerable<PublicRecordBase> ReadVoters(string[] list);
+    public IEnumerable<PublicRecordBase> ReadHistories(string[] list);
+    public Task<Manifest> CommitRecords<T>(string FileName, IEnumerable<PublicRecordBase> publicRecords) where T : class;
 
   }
 }

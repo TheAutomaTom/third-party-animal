@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace _3PA.Core.Models.Fl
 {
   [Table("Voters")]
-  public class FlVoter
+  public class FlVoter : PublicRecordBase
   {
     [Key]
     public string VoterId { get; set; }

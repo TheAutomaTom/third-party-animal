@@ -2,7 +2,7 @@
 {
   public enum SupportedUsStates
   {
-    FL,
-    NC
+    Fl,
+    Nc
   }
 }

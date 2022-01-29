@@ -1,11 +1,13 @@
 ﻿using _3PA.Core.Models;
 using _3PA.Core.Models.Nc;
 using _3PA.Data.Sql.Core;
+using _3PA.Data.Sql.Core.Bases;
 using _3PA.Data.Sql.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace _3PA.Data.Sql.Nc
 {
-  public class NcRepository : IPublicRecordsRepository
+  public class NcRepository : PublicRecordsRepositoryBase, IPublicRecordsRepository
   {
     NcDbContext _context { get; set; }
     IGeoData _geoData { get; set; }
@@ -16,7 +18,7 @@ namespace _3PA.Data.Sql.Nc
       _geoData = new NcGeoData();
     }
 
-    public IEnumerable<object> ReadVoters(string[] raw)
+    public IEnumerable<PublicRecordBase> ReadVoters(string[] raw)
     {
       var list = sanitizeInput(raw, 1 /*71*/ );
       var toReturn = list.Select(v => new NcVoter(v)).ToList();
@@ -24,7 +26,7 @@ namespace _3PA.Data.Sql.Nc
 
     }
       
-    public IEnumerable<object> ReadHistories(string[] list) =>
+    public IEnumerable<PublicRecordBase> ReadHistories(string[] list) =>
       sanitizeInput(list, 15).Select(v => new NcHistory(v)).ToList();
     string[] sanitizeInput(string[] listWithHeaders, int headerCount)
     {
@@ -33,11 +35,12 @@ namespace _3PA.Data.Sql.Nc
       return withoutQuotes;
     }      
 
-    public async Task<int> CommitRecords<T>(IEnumerable<object> publicRecords) where T : class
+    public async Task<Manifest> CommitRecords<T>(string fileName, IEnumerable<PublicRecordBase> publicRecords) where T : class
     {
-      var tally = new tallyHelper(publicRecords.Count());
-      Console.WriteLine($"Processing {tally.Goal.ToString("N0")} records...");
-      Console.WriteLine("{0,-15}{1,-20}{2,20}", "COUNT", "DURATION", "PROJECTION");
+      var updates = 0;
+      var saves = 0;
+      var t = new Tally(publicRecords.Count());
+      base.printTitle(t.Goal);
 
       foreach (var x in publicRecords)
       {
@@ -47,54 +50,91 @@ namespace _3PA.Data.Sql.Nc
           if (existingId == null)
           {
             await _context.Voters.AddAsync(x as NcVoter);
-            tally.Updates++;
+            t.Validated++;
           }
-        }
-        else
-        {
-          var existingId = _context.Histories.FirstOrDefault(exists => exists.Id == (x as NcHistory).Id);
-          if (existingId == null)
+          else
           {
-            await _context.Histories.AddAsync(x as NcHistory);
-            tally.Updates++;
+            t.Skipped++;
+          }        
+
+        }
+        else //History...
+        {
+          //Check if this history is new...
+          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (x as NcHistory).Id) != null;
+          if (!existingHistory)
+          {
+            //Check if this history is an orphan...
+            var existingVoter = _context.Voters.FirstOrDefault(exists => exists.VoterRegNum == (x as NcHistory).VoterRegistrationNumber);
+            if(existingVoter != null)
+            {
+              var h = new NcHistoryActive(existingVoter, (x as NcHistory));
+              await _context.Histories.AddAsync(h);
+              t.Validated++;
+            }
+            else
+            {
+              //Check if the orphan is already recorded...
+              var existingOrphan = _context.OrphanHistories.FirstOrDefault(exists => exists.Id == (x as NcHistory).Id);
+              if (existingOrphan == null)
+              {
+                var h = new NcHistoryOrphan(x as NcHistory);
+                await _context.OrphanHistories.AddAsync(h);
+                t.Orphaned++;
+              }
+              else
+              {
+                t.Skipped++;
+              }
+            }
           }
         }
-        tally.Progress++;
-        if ((tally.Updates > 0) && (tally.Updates % 10000 == 0))
+        t.Progress++;
+
+        updates = t.Validated + t.Orphaned;
+        if ((updates > 0) && (updates % 10000 == 0))
         {
-          updateIncrementally(
-            tally.Progress,
-            tally.Goal,
-            tally.UpdateTime.Elapsed.TotalSeconds,
-            tally.TotalTime.Elapsed.TotalSeconds
-           );
-          tally.UpdateTime.Restart();
+          saves = _context.SaveChanges();
+          base.printUpdate(
+                saves,
+                t.Progress,
+                t.Goal,
+                t.UpdateTime.Elapsed.TotalSeconds,
+                t.TotalTime.Elapsed.TotalSeconds
+              );
+          t.UpdateTime.Restart();
         }
+
       }
+
+      updateManifest(fileName);
+      saves = _context.SaveChanges();
+      base.printUpdate(
+            saves,
+            t.Progress,
+            t.Goal,
+            t.UpdateTime.Elapsed.TotalSeconds,
+            t.TotalTime.Elapsed.TotalSeconds
+          );
+
       Console.WriteLine("FINALIZING UPDATES...");
-      updateIncrementally(
-        tally.Progress,
-        tally.Goal,
-        tally.UpdateTime.Elapsed.TotalSeconds,
-        tally.TotalTime.Elapsed.TotalSeconds
-       );
+      updates = t.Validated + t.Orphaned;
+      var results = new Manifest(fileName, updates, t.Goal - updates);
+      await _context.Manifest.AddAsync(results);
+      saves = _context.SaveChanges();
+      return results;
 
-      return tally.Updates;
     }
 
-    void updateIncrementally(int progress, int goal, double updateTime, double totalTime)
+    void updateManifest(string fileName)
     {
-      _context.SaveChanges();
-      var timePer = updateTime / 10_000;
-      var timeLeft = (timePer * (goal - progress));
-      var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
-
-      Console.WriteLine("{0,-15}{1,-20}{2,20}",
-          progress.ToString("N0"),
-          $"{Math.Round(totalTime, 2)}\t({Math.Round(updateTime, 2)}/10k)",
-          estTimeCompleted
-        );
+      var manifestExists = _context.Manifest.FirstOrDefault(exists => exists.FileName == fileName);
+      if (manifestExists != null)
+      {
+        _context.Entry(manifestExists).State = EntityState.Deleted;
+      }
     }
+
 
   }
 }

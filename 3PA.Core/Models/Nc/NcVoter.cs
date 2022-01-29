@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace _3PA.Core.Models.Nc
 {
   [Table("Voters")]
-  public class NcVoter
+  public class NcVoter : PublicRecordBase
   {
     public string? CountyId { get; set; }
     public string? CountyDesc { get; set; }
