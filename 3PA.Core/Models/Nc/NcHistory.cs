@@ -3,13 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _3PA.Core.Models.Nc
 {
-  [Table("Histories")]
-  public class NcHistory
+  public class NcHistory : PublicRecordBase
   {
+    #region Concerning EF...
+    //foreign key already present in public records entity
+    //public string VoterRegistrationNumber { get; set; } 
+    public NcHistory() { }
+    #endregion ...EF
+
+
     [Key]
     public string Id { get; set; }
     public int CountyId { get; set; }
     public string CountyDescription { get; set; }
+    // Note this is "VoterRegNum" in NcVoter
     public string VoterRegistrationNumber { get; set; }
     public string ElectionLable { get; set; }
     public string ElectionDescription { get; set; }
@@ -23,7 +30,6 @@ namespace _3PA.Core.Models.Nc
     public string VotedCounty_Description { get; set; }
     public string VotedLabel { get; set; }
     public string VotedDescription { get; set; }
-    public NcHistory() { }
     public NcHistory(string row)
     {
       string[] values = row.Split('\t');

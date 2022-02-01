@@ -9,11 +9,14 @@ namespace _3PA.Data.Sql.Fl
     public DbSet<FlVoter> Voters { get; set; }
     public DbSet<FlHistoryActive> Histories { get; set; }
     public DbSet<FlHistoryOrphan> OrphanHistories { get; set; }
-    public string catalog => "Raw.Fl";
+    public DbSet<Manifest> Manifest { get; set; }
+    public string catalog => "PublicRecord.Fl";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      optionsBuilder.UseSqlServer($"{base.basePath}{catalog}");
+      optionsBuilder.UseSqlServer(
+                        $"{base.basePath}{catalog}"
+                        );
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       modelBuilder.Entity<FlHistoryActive>()

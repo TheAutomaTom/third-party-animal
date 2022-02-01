@@ -2,9 +2,9 @@
 
 namespace _3PA.Data.Sql.Core
 {
-  internal class tallyHelper
+  internal class Tally
   {
-    public tallyHelper(int goal, bool start = true)
+    public Tally(int goal, bool start = true)
     {
       Goal = goal;
       TotalTime = new Stopwatch();
@@ -16,10 +16,13 @@ namespace _3PA.Data.Sql.Core
       }
     }
     public int Goal { get; set; }
-    public int Progress { get; set; }
-    public int Updates { get; set; }
     public Stopwatch TotalTime { get; set; }
+    public int Progress { get; set; }
     public Stopwatch UpdateTime { get; set; }
+    public int Validated { get; set; }
+    public int Orphaned { get; set; }
+    public int Skipped { get; set; }
+
     public void EndTimers()
     {
       TotalTime.Stop();

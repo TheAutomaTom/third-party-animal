@@ -1,14 +1,16 @@
-﻿namespace _3PA.API.Services.PublicRecords.Consumer.Commands
+﻿using _3PA.Data.Sql.Core;
+
+namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 {
   public class ReadFileToSqlResponse
   {
-    public ReadFileToSqlResponse(int count)
+    public ReadFileToSqlResponse(Manifest manifest)
     {
-      CountUpserted = count;
+      Results = manifest;
 
     }
 
-    public int CountUpserted { get; set; }
+    public Manifest Results { get; set; }
 
 
   }

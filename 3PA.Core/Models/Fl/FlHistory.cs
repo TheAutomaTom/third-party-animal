@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _3PA.Core.Models.Fl
 {
-  public class FlHistory
+  public class FlHistory : PublicRecordBase
   {
     #region Concerning EF...
     //foreign key already present in public records entity

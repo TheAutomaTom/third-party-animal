@@ -5,22 +5,30 @@ using MediatR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
-//   3PA.API's IMediatR _mediatr...
+builder.Services.AddControllers()
+                .AddJsonOptions(x =>
+              x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); 
+
+// MediatR enabled projects
 builder.Services.AddMediatR(typeof(ConventionsController).GetTypeInfo().Assembly);
-//   3PA.API.Services' MediatR components...
 builder.Services.AddMediatR(typeof(GetCountyNameFromCodeHandler).GetTypeInfo().Assembly);
+
+
 
 builder.Services.Configure<FormOptions>(options =>
 {
   options.ValueLengthLimit = 300_000_000;
   options.MultipartBodyLengthLimit = 300_000_000;
   options.MemoryBufferThreshold = 300_000_000;
+
+
 });
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

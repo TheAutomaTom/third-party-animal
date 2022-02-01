@@ -3,6 +3,7 @@
   public class FlVoterConfig : IPublicRecordEntryConfig
   {
     public static string PathSuffix => "_VoterDetail";
+    
     public static string[] Headers =>
       new string[] {
           "CountyCode",

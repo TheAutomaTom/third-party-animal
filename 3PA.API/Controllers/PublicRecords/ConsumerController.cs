@@ -27,7 +27,8 @@ namespace _3PA.API.Controllers.PublicRecords
     {
       try
       {
-        if(file.Length > 0)
+        var fileExtention = Path.GetExtension(file.FileName);
+        if (file.Length > 0 && fileExtention == ".txt")
         {
           //originalName must be used to config objects being read
           var originalName = Path.GetFileName(file.FileName);
@@ -60,18 +61,4 @@ namespace _3PA.API.Controllers.PublicRecords
   }
 }
 
-        /*
-        foreach (var formFile in files)
-        {
-            if (formFile.Length > 0)
-            {
-                var filePath = Path.GetTempFileName();
-
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await formFile.CopyToAsync(stream);
-                }
-            }
-        }
-         */
 
