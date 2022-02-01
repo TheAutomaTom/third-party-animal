@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3PA.Data.Sql", "3PA.Data.Sq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3PA.Core", "3PA.Core\3PA.Core.csproj", "{2AC5498E-933A-4689-AF10-6002AB86DB90}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "3pa.ui", "3PA.UI\3pa.ui.esproj", "{D5C1EDCD-6AC6-465A-92F4-5D298452A096}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,12 @@ Global
 		{2AC5498E-933A-4689-AF10-6002AB86DB90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AC5498E-933A-4689-AF10-6002AB86DB90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AC5498E-933A-4689-AF10-6002AB86DB90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5C1EDCD-6AC6-465A-92F4-5D298452A096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5C1EDCD-6AC6-465A-92F4-5D298452A096}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5C1EDCD-6AC6-465A-92F4-5D298452A096}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D5C1EDCD-6AC6-465A-92F4-5D298452A096}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5C1EDCD-6AC6-465A-92F4-5D298452A096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5C1EDCD-6AC6-465A-92F4-5D298452A096}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
