@@ -11,8 +11,8 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-  //import HelloWorld from './components/HelloWorld.vue';
-  import Test from "./components/Test.vue";
+import {AppStateModule} from "./store/Modules/appStateData";
+import Test from "./components/Test.vue";
 
   @Component({
     components: {
@@ -21,8 +21,10 @@ import { Vue, Component } from "vue-property-decorator";
   })
 
   export default class App extends Vue{
-
-  };
+    mounted(){
+      console.warn("App.vue says " + AppStateModule.testMessage);
+    }
+  }
 </script>
 
 <style>
