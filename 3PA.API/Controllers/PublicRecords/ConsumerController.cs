@@ -18,6 +18,7 @@ namespace _3PA.API.Controllers.PublicRecords
 
     ///<summary>Read public record file and write contents to local Sql</summary>
     ///<param name="state">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
+    ///<param name="category">Voter Identity or History</param>
     ///<param name="file">Publicly available voter data file</param>
     /// <response code="200">Returns count of rows added to local db.</response>
     /// <response code="400">If there are errors completing the task</response>
@@ -48,13 +49,13 @@ namespace _3PA.API.Controllers.PublicRecords
           }
           return Ok(_mediator.Send(new ReadFileToSqlRequest(state, category, originalName, tempPath)));
         }
-        return BadRequest();
+        return BadRequest("File size or extension non-compliant.");
 
       }
       catch (Exception)
       {
 
-        return BadRequest();
+        return BadRequest("failed to process file.");
       }
     }
 
