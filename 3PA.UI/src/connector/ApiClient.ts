@@ -6,7 +6,7 @@ export class ApiClient{
   }
 
   async postCsvToSql(usState: string, category: string, file: File) {
-    const url = `${this._baseUrl}/PublicRecords/Consumer/sql/from-public-records/Fl/Voter-file`;
+    const url = `${this._baseUrl}/PublicRecords/Consumer/sql/from-public-records/${usState}/${category}-file`;
 
 
     const formData = new FormData();
