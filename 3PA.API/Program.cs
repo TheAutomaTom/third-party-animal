@@ -9,24 +9,26 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers()
-                .AddJsonOptions(x =>
+// Cors Policy
+builder.Services.AddCors(o => {
+  o.AddDefaultPolicy( builder => {
+      builder.WithOrigins( /*List 3pa.ui's address(es):*/"https://localhost:5002"); });
+});
+
+// Add services to the container
+builder.Services.AddControllers().AddJsonOptions(x =>
               x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); 
 
 // MediatR enabled projects
-builder.Services.AddMediatR(typeof(ConventionsController).GetTypeInfo().Assembly);
-builder.Services.AddMediatR(typeof(GetCountyNameFromCodeHandler).GetTypeInfo().Assembly);
+builder.Services.AddMediatR(typeof(ConventionsController).GetTypeInfo().Assembly)
+                .AddMediatR(typeof(GetCountyNameFromCodeHandler).GetTypeInfo().Assembly);
 
-
-
+//acceptable file sizes
 builder.Services.Configure<FormOptions>(options =>
 {
   options.ValueLengthLimit = 300_000_000;
   options.MultipartBodyLengthLimit = 300_000_000;
   options.MemoryBufferThreshold = 300_000_000;
-
-
 });
 
 
@@ -60,21 +62,16 @@ builder.Services.AddSwaggerGen(options =>
 
 
 var app = builder.Build();
-
+app.UseCors();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI();
-
-
-  
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
