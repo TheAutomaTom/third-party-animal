@@ -6,8 +6,6 @@ export interface IAppStateData{
   _api: ApiClient;
   isLoading: boolean;
   isInModal: boolean;
-
-  testMessage: string;
 }
 
 @Module
@@ -15,13 +13,10 @@ class AppState extends VuexModule implements IAppStateData{
   public readonly _api : ApiClient;
   isLoading = false;
   isInModal = false;
-
-  testMessage= "AppState testMessage!";
   
   constructor(o: RegisterOptions) {
     super(o);
     this._api = new ApiClient;
-    console.warn("AppState CTOR'd!!!");
   }
 }
 

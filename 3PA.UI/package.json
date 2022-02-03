@@ -8,7 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
+    "@types/npm": "^7.19.0",
+    "core-js": "^3.21.0",
     "jest": "^27.4.7",
     "jest-editor-support": "^30.0.2",
     "tslib": "^2.3.1",
