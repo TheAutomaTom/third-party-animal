@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _3PA.API.Controllers
@@ -17,7 +18,7 @@ namespace _3PA.API.Controllers
 		{
 			try
 			{
-				return Ok(await _mediator.Send(new ManifestSummaryRequest()));
+				return Ok(await _mediator.Send(new GetManifestSummaryQuery()));
 			}
 			catch (Exception ex)
 			{
