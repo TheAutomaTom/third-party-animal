@@ -5,7 +5,7 @@ namespace _3PA.API.Services.GeoData.CountyNameById.Queries
 {
   public class CountyNameByIdResponse
   {
-    public CountyNameByIdResponse(CountyNameByIdRequest query, string properName = "Invalid Code")
+    public CountyNameByIdResponse(CountyNameByIdQuery query, string properName = "Invalid Code")
     {
       UsState = query.UsState.ToString();
       CountyId = query.CountyId;

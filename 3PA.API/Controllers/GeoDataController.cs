@@ -24,7 +24,7 @@ namespace _3PA.API.Controllers
     {
       try
       {
-        return Ok(await _mediator.Send(new CountyNamesRequest(usState)));
+        return Ok(await _mediator.Send(new CountyNamesQuery(usState)));
       }
       catch (Exception ex)
       {
@@ -42,7 +42,7 @@ namespace _3PA.API.Controllers
     {
       try
       {
-        return Ok(await _mediator.Send(new CountyNameByIdRequest(usState, countyId)));
+        return Ok(await _mediator.Send(new CountyNameByIdQuery(usState, countyId)));
       }
       catch (Exception)
       {

@@ -10,11 +10,11 @@ using MediatR;
 
 namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 {
-  public class ReadFileToSqlHandler : IRequestHandler<ReadFileToSqlRequest, ReadFileToSqlResponse>
+  public class ReadFileToSqlHandler : IRequestHandler<ReadFileToSqlCommand, ReadFileToSqlResponse>
   {
     IPublicRecordsRepository repo { get; set; }
 
-    public async Task<ReadFileToSqlResponse> Handle(ReadFileToSqlRequest request, CancellationToken cancellationToken)
+    public async Task<ReadFileToSqlResponse> Handle(ReadFileToSqlCommand request, CancellationToken cancellationToken)
     {
       var v = new ReadFileToSqlValidator();
       var validationResult = v.Validate(request);
