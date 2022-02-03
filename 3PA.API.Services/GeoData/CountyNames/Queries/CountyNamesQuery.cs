@@ -5,11 +5,11 @@ namespace _3PA.API.Services.GeoData.CountyNames.Queries
 {
 	public class CountyNamesQuery: IRequest<CountyNamesResponse>
 	{
-		public CountyNamesQuery(SupportedUsStates usState)
+		public CountyNamesQuery(UsState usState)
 		{
 			UsState = usState;		
 		}
-		public SupportedUsStates UsState { get; set; }
+		public UsState UsState { get; set; }
 
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace _3PA.Core.Models
+namespace _3PA.Core.Models
 {
   public abstract class IGeoData
   {

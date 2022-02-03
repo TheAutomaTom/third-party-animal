@@ -19,9 +19,23 @@ namespace _3PA.Data.Sql.Fl
       _geoData = new FlGeoData();
     }
 
+
     public IEnumerable<PublicRecordBase> ReadVoters(string[] list) => list.Select(v => new FlVoter(v)).ToList();
     public IEnumerable<PublicRecordBase> ReadHistories(string[] list) => list.Select(v => new FlHistory(v)).ToList();
-
+    public List<Manifest> GetManifestSummary()
+		{
+      // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
+      //return base.GetManifestSummary(_context);          
+      var summary = new List<Manifest>();          
+      if (_context.Database.CanConnect() && _context.Manifest.Any())      	
+      {
+        foreach (var entry in _context.Manifest)      	
+        {
+          summary.Add(entry);      		
+        }
+      }      
+      return summary; 
+    }
     public async Task<Manifest> CommitRecords<T>(string fileName, IEnumerable<PublicRecordBase> publicRecords) where T : class
     {
       var updates = 0;
@@ -107,7 +121,7 @@ namespace _3PA.Data.Sql.Fl
 
       Console.WriteLine("FINALIZING UPDATES...");
       updates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, updates, t.Goal - updates);
+      var results = new Manifest(fileName, updates, t.Goal - updates, UsState.Fl);
       await _context.Manifest.AddAsync(results);
 
         saves = _context.SaveChanges();
@@ -125,27 +139,7 @@ namespace _3PA.Data.Sql.Fl
       }
     }
 
-  }
+	}
 }
 
 
-
-
-
-/*    public void PrintSummary(DbContextBase context)
-    {
-      Console.ResetColor();
-      Console.WriteLine($"DATABASE SUMMARY:");
-
-
-
-
-
-      var dCount = context.Details.FromSqlRaw("SELECT COUNT(*) FROM dbo.Details");
-      var hCount = context.Histories.FromSqlRaw("SELECT COUNT(*) FROM dbo.Histories");
-
-
-      Console.WriteLine($"{dCount} Voters with {hCount} histories.");
-
-
-    }*/

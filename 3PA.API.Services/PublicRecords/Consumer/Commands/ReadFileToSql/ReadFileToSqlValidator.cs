@@ -7,7 +7,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
   {
     public ReadFileToSqlValidator()
      {
-      When(r => r.State == SupportedUsStates.Fl, () =>
+      When(r => r.State == UsState.Fl, () =>
       {
         When(r => r.Category == Category.Voter, () =>
         {
@@ -25,7 +25,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
         });
       });
 
-      When(r => r.State == SupportedUsStates.Nc, () =>
+      When(r => r.State == UsState.Nc, () =>
       {
         When(r => r.Category == Category.Voter, () =>
         {

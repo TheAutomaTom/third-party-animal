@@ -18,6 +18,21 @@ namespace _3PA.Data.Sql.Nc
       _geoData = new NcGeoData();
     }
 
+    public List<Manifest> GetManifestSummary()
+    {
+      // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
+      //return base.GetManifestSummary(_context);          
+      var summary = new List<Manifest>();
+      if (_context.Database.CanConnect() && _context.Manifest.Any())
+      {
+        foreach (var entry in _context.Manifest)
+        {
+          summary.Add(entry);
+        }
+      }
+      return summary;
+    }
+
     public IEnumerable<PublicRecordBase> ReadVoters(string[] raw)
     {
       var list = sanitizeInput(raw, 1 /*71*/ );
@@ -119,7 +134,7 @@ namespace _3PA.Data.Sql.Nc
 
       Console.WriteLine("FINALIZING UPDATES...");
       updates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, updates, t.Goal - updates);
+      var results = new Manifest(fileName, updates, t.Goal - updates, UsState.Nc);
       await _context.Manifest.AddAsync(results);
       saves = _context.SaveChanges();
       return results;

@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models.Nc
 {
-  public class NcHistoryConfig
+  public class NcHistoryConfig : IPublicRecordEntryConfig
   {
     public static string PathSuffix = "_VoterHistory";
     public static string FileSuffix = ".txt";

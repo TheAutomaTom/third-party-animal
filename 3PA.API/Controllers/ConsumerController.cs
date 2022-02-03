@@ -1,4 +1,5 @@
 ﻿using _3PA.API.Services.PublicRecords.Consumer.Commands;
+using _3PA.API.Services.PublicRecords.Consumer.Queries.GetCountyIdFromFilename;
 using _3PA.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,9 @@ namespace _3PA.API.Controllers
     ///<param name="file">Publicly available voter data file</param>
     /// <response code="200">Returns count of rows added to local db.</response>
     /// <response code="400">If there are errors completing the task</response>
-    [HttpPost("Consumer/{usState}/{category}")]
+    [HttpPost("ReadToSql/{usState}/{category}")]
     [RequestSizeLimit(bytes: 500_000_000)]
-    public async Task<ActionResult> ReadFileToSql(SupportedUsStates usState, Category category, IFormFile file)
+    public async Task<ActionResult> ReadFileToSql(UsState usState, Category category, IFormFile file)
     {
       try
       {
@@ -52,10 +53,23 @@ namespace _3PA.API.Controllers
       }
       catch (Exception)
       {
-
         return BadRequest();
       }
     }
+
+    [HttpGet("IdFromFileName/{usState}/{category}/{fileName}")]
+    public async Task<ActionResult> GetIdFromFileName(UsState usState, Category category, string fileName)
+		{
+			try 
+      {
+        return Ok(_mediator.Send(new GetCountyIdFromFilenameQuery(usState, category, fileName)));
+      }
+      catch (Exception)
+      {
+        return BadRequest("Failed to get county Id from filename.");
+      }
+    }
+
 
   }
 }

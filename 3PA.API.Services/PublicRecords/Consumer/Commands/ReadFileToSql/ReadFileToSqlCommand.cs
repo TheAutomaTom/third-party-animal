@@ -5,7 +5,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 {
   public class ReadFileToSqlCommand: IRequest<ReadFileToSqlResponse>
   {
-    public ReadFileToSqlCommand(SupportedUsStates state, Category category, string fileName, string tempPath)
+    public ReadFileToSqlCommand(UsState state, Category category, string fileName, string tempPath)
     {
       State = state;
       Category = category;
@@ -13,7 +13,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
       TempPath = tempPath;
 
     }
-    public SupportedUsStates State { get; set; }
+    public UsState State { get; set; }
     public Category Category { get; set; }
     public string FileName { get; set; }
     public string TempPath { get; set; }

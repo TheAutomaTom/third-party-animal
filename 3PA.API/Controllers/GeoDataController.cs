@@ -19,7 +19,7 @@ namespace _3PA.API.Controllers
     ///<param name="usState">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
     /// <response code="200">A dictionary of county ids and proper names.</response>    
     [HttpGet("/CountyNames/{usState}")]
-    public async Task<ActionResult> GetCountyNames(SupportedUsStates usState)
+    public async Task<ActionResult> GetCountyNames(UsState usState)
     {
       try
       {
@@ -37,7 +37,7 @@ namespace _3PA.API.Controllers
     ///<param name="countyId">Public records' county identifier used in file names.  Could be numbers or letters.</param>
     /// <response code="200">A dictionary of county ids and proper names.</response>    
     [HttpGet("/CountyName/{usState}/{countyId}")]
-    public async Task<ActionResult> GetCountyNameById(SupportedUsStates usState, string countyId)
+    public async Task<ActionResult> GetCountyNameById(UsState usState, string countyId)
     {
       try
       {

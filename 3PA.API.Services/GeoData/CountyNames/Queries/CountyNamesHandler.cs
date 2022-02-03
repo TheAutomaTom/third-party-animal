@@ -11,11 +11,11 @@ namespace _3PA.API.Services.GeoData.CountyNames.Queries
 		{
       switch (request.UsState)
       {
-        case SupportedUsStates.Fl:
+        case UsState.Fl:
           geoData = new FlGeoData();
           break;
 
-        case SupportedUsStates.Nc:
+        case UsState.Nc:
           geoData = new NcGeoData();
           break;
 

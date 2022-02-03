@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +25,21 @@ namespace _3PA.Data.Sql.Core.Bases
           estTimeCompleted
         );
     }
+
+		// I need to move Manifest into the DbContext  Base to make this work...
+  //  public List<Manifest> GetManifestSummary(DbContextBase _context)
+		//{
+  //    var summary = new List<Manifest>();
+  //    if (_context.Database.CanConnect() && _context.Manifest.Any())
+		//	{
+		//		foreach (var entry in _context.Manifest)
+		//		{
+  //        summary.Add(entry);
+		//		}        
+  //    }
+  //    return summary;      
+  //  }
+		private bool disposedValue;
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposedValue)

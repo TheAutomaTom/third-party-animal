@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models
 {
-  public enum SupportedUsStates
+  public enum UsState
   {
     Fl,
     Nc

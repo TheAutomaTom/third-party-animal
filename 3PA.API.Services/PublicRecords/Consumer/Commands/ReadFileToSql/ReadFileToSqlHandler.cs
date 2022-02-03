@@ -27,7 +27,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 
       switch (request.State)
       {
-        case SupportedUsStates.Fl:
+        case UsState.Fl:
           repo = new FlRepository();
           if (request.Category == Category.Voter)
           {
@@ -42,7 +42,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
             return new ReadFileToSqlResponse(updated);
           }
 
-        case SupportedUsStates.Nc:
+        case UsState.Nc:
           repo = new NcRepository();
           if (request.Category == Category.Voter)
           {
@@ -58,7 +58,7 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
           }
 
         default:
-          return new ReadFileToSqlResponse(new Manifest($"Unable to parse {request.FileName}" , 0, 0));
+          throw new ValidationException($"Could not determine process for {request.State}: {request.Category}.");
       }
 
     }

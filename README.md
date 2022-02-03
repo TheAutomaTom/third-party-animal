@@ -38,6 +38,15 @@
 
 ## To-do's & Intentions
 #### Public Records Collection
+- `Consumer` uses one repo for each state to read public records...
+    - I can't seem to combine the repos into a generic
+    - This may be because each repo makes decisions about Voter Identity vs History inside the same big method.
+        - `PublicRecordBase` doesn't doo much but prevent using `object` in the repos
+        - `IGeoData` is covering too much... some of the props are just "repo helpers"
+        - `IPublicrecordEntryConfig` is half implemented...
+    
+    
+    
 - Add service to scan orphan histories for newly added voters in that county, and reconnect them in active histories.
 - Add service to scan "other counties" to see if I can correlate a voter moving to their orphan histories *(low priority)*.
 
