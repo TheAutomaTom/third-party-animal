@@ -2,28 +2,27 @@
 using _3PA.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-
-namespace _3PA.API.Controllers.PublicRecords
-{  
-  [Route("api/PublicRecords/[Controller]")]
+namespace _3PA.API.Controllers
+{
+  [Route("api/[Controller]")]
   [ApiController] //What does [ApiController] enable?
-  public class ConsumerController : Controller
+  public class PublicRecordsController : Controller
   {
     readonly IMediator _mediator;
-
-    public ConsumerController(IMediator mediator)
+    public PublicRecordsController(IMediator mediator)
     {
       _mediator = mediator;
     }
 
     ///<summary>Read public record file and write contents to local Sql</summary>
-    ///<param name="state">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
+    ///<param name="usState">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
+    ///<param name="category">Type of file: Voter Identities or Histories</param>
     ///<param name="file">Publicly available voter data file</param>
     /// <response code="200">Returns count of rows added to local db.</response>
     /// <response code="400">If there are errors completing the task</response>
-    [HttpPost("sql/from-public-records/{state}/{category}-file")]
+    [HttpPost("Consumer/{usState}/{category}")]
     [RequestSizeLimit(bytes: 500_000_000)]
-    public async Task<ActionResult> ReadFileToSql(SupportedUsStates state, Category category, IFormFile file)
+    public async Task<ActionResult> ReadFileToSql(SupportedUsStates usState, Category category, IFormFile file)
     {
       try
       {
@@ -46,7 +45,7 @@ namespace _3PA.API.Controllers.PublicRecords
             await file.CopyToAsync(filestream);
             filestream.Close();
           }
-          return Ok(_mediator.Send(new ReadFileToSqlRequest(state, category, originalName, tempPath)));
+          return Ok(_mediator.Send(new ReadFileToSqlRequest(usState, category, originalName, tempPath)));
         }
         return BadRequest();
 

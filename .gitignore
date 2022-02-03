@@ -11,19 +11,11 @@
 3PA.Data.Sql/obj/
 3PA.Core/bin/
 3PA.Core/obj/
+3PA.Queue/bin/
+3PA.Queue/obj/
 
 # Projects not yet shared
-3PA.Console/
-3PA.Console.Services/
-3PA.Data/
-3PA.Logic/
-3PA.Resources/
-3pa.ui/
-3pa.ui/node_modules/
-3pa.ui/dist/
-3pa.ui/.env.*.local
-3pa.ui/yarn.lock
-3pa.ui/.gitignore
+3PA.Queue/
 
 # Log files
 npm-debug.log*

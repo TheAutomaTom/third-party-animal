@@ -25,14 +25,5 @@ namespace _3PA.Data.Sql.Core.Bases
           estTimeCompleted
         );
     }
-
-    /*
-     Processing 43,790 records...
-    UPDATED        PROCESSED      DURATION                      PROJECTION
-    10000          10,000         19.23     (19.23/10k)                5:18 PM
-    10000          20,000         40.95     (18.94/10k)                5:18 PM
-    10000          30,000         61.31     (18.26/10k)                5:18 PM
-    10000          40,000         81.31     (17.96/10k)                5:18 PM
-     */
   }
 }
