@@ -1,6 +1,6 @@
-using _3PA.API.Controllers.PublicRecords;
+using _3PA.API.Controllers;
 using _3PA.API.OpenApiConfiguration;
-using _3PA.API.Services.PublicRecords.Conventions.Queries;
+using _3PA.API.Services.GeoData.CountyNameById.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
@@ -15,20 +15,15 @@ builder.Services.AddControllers()
               x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); 
 
 // MediatR enabled projects
-builder.Services.AddMediatR(typeof(ConventionsController).GetTypeInfo().Assembly);
-builder.Services.AddMediatR(typeof(GetCountyNameFromCodeHandler).GetTypeInfo().Assembly);
-
-
+builder.Services.AddMediatR(typeof(GeoDataController).GetTypeInfo().Assembly);
+builder.Services.AddMediatR(typeof(CountyNameByIdHandler).GetTypeInfo().Assembly);
 
 builder.Services.Configure<FormOptions>(options =>
 {
   options.ValueLengthLimit = 300_000_000;
   options.MultipartBodyLengthLimit = 300_000_000;
   options.MemoryBufferThreshold = 300_000_000;
-
-
 });
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -58,23 +53,15 @@ builder.Services.AddSwaggerGen(options =>
   
 });
 
-
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
-  app.UseSwaggerUI();
-
-
-  
+  app.UseSwaggerUI();  
 }
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
