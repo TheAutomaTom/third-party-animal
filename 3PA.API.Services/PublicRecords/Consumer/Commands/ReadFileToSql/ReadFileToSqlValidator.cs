@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 {
-  public class ReadFileToSqlValidator : AbstractValidator<ReadFileToSqlRequest>
+  public class ReadFileToSqlValidator : AbstractValidator<ReadFileToSqlCommand>
   {
     public ReadFileToSqlValidator()
      {

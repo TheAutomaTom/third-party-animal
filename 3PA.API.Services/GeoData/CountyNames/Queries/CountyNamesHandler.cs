@@ -5,10 +5,10 @@ using _3PA.Core.Models.Nc;
 using MediatR;
 namespace _3PA.API.Services.GeoData.CountyNames.Queries
 {
-	public class CountyNamesHandler : IRequestHandler<CountyNamesRequest, CountyNamesResponse>
+	public class CountyNamesHandler : IRequestHandler<CountyNamesQuery, CountyNamesResponse>
   {
     IGeoData geoData { get; set; }
-    public Task<CountyNamesResponse> Handle(CountyNamesRequest request, CancellationToken cancellationToken)
+    public Task<CountyNamesResponse> Handle(CountyNamesQuery request, CancellationToken cancellationToken)
 		{
       switch (request.UsState)
       {

@@ -3,9 +3,9 @@ using MediatR;
 
 namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 {
-  public class ReadFileToSqlRequest: IRequest<ReadFileToSqlResponse>
+  public class ReadFileToSqlCommand: IRequest<ReadFileToSqlResponse>
   {
-    public ReadFileToSqlRequest(SupportedUsStates state, Category category, string fileName, string tempPath)
+    public ReadFileToSqlCommand(SupportedUsStates state, Category category, string fileName, string tempPath)
     {
       State = state;
       Category = category;

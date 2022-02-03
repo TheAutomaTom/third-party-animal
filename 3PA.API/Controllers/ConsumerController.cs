@@ -45,7 +45,7 @@ namespace _3PA.API.Controllers
             await file.CopyToAsync(filestream);
             filestream.Close();
           }
-          return Ok(_mediator.Send(new ReadFileToSqlRequest(usState, category, originalName, tempPath)));
+          return Ok(_mediator.Send(new ReadFileToSqlCommand(usState, category, originalName, tempPath)));
         }
         return BadRequest();
 
