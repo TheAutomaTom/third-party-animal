@@ -7,7 +7,7 @@
     public override int CountyIdStartPosition => 1;
     public override int CountyIdMaxLength => 3;
     public override bool KeyIsInt => false; 
-    public override Dictionary<string, string> CountyIds 
+    public override IDictionary<string, string> CountyIds 
       => new Dictionary<string, string>
       {
         {"ALA","Alachua"},

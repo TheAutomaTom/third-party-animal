@@ -1,0 +1,138 @@
+/***********************************************************************************
+* name:     layout_ncvhis.txt
+* purpose:  Contains voter history information (voter name not included). Limited
+*           to election dates within the last 10 years.
+*           This is a weekly point-in-time snapshot current per file date/time stamp. 
+* updated:  06/17/2021
+* format:   tab delimited
+* instructions: 
+*            1) extract using a file archiving and compression program (eg. WinZip)
+*            2) data can be linked to ncvoter file by ncid
+***********************************************************************************/
+
+------------------------------------------------------------------------------------
+name                    data type          description
+------------------------------------------------------------------------------------
+county_id               int                County identification number 
+county_desc             varchar(20)        County name
+voter_reg_num           char(12)           Voter registration number (unique to county)
+election_lbl            char(10)           Election date label
+election_desc           varchar(230)       Election description
+voting_method           varchar(10)        Voting method
+voted_party_cd          varchar(3)         Voted party code
+voted_party_desc        varchar(60)        Voted party name
+pct_label               varchar(6)         Precinct code for voter at time of election (see election_lbl)
+pct_description         varchar(60)        Precinct name for voter at time of election (see election_lbl)
+ncid                    varchar(12)        North Carolina identification number
+voted_county_id         varchar(3)         The county id number in which the voter voted in the election (see election_lbl)
+voted_county_desc       varchar(60)        The county name in which the voter voted in the election (see election_lbl)
+vtd_label               varchar(6)         Voter tabulation district label for voter at time of election (see election_lbl)
+vtd_description         varchar(60)        Voter tabulation district name for voter at time of election (see election_lbl)
+------------------------------------------------------------------------------------
+
+
+/* ****************************************************************************
+County and identification number/codes
+county             county_id  
+*******************************************************************************
+ALAMANCE            1
+ALEXANDER           2
+ALLEGHANY           3
+ANSON               4
+ASHE                5
+AVERY               6
+BEAUFORT            7
+BERTIE              8
+BLADEN              9
+BRUNSWICK          10
+BUNCOMBE           11
+BURKE              12
+CABARRUS           13
+CALDWELL           14
+CAMDEN             15
+CARTERET           16
+CASWELL            17
+CATAWBA            18
+CHATHAM            19
+CHEROKEE           20
+CHOWAN             21
+CLAY               22
+CLEVELAND          23
+COLUMBUS           24
+CRAVEN             25
+CUMBERLAND         26
+CURRITUCK          27
+DARE               28
+DAVIDSON           29
+DAVIE              30
+DUPLIN             31
+DURHAM             32
+EDGECOMBE          33
+FORSYTH            34
+FRANKLIN           35
+GASTON             36
+GATES              37
+GRAHAM             38
+GRANVILLE          39
+GREENE             40
+GUILFORD           41
+HALIFAX            42
+HARNETT            43
+HAYWOOD            44
+HENDERSON          45
+HERTFORD           46
+HOKE               47
+HYDE               48
+IREDELL            49
+JACKSON            50
+JOHNSTON           51
+JONES              52
+LEE                53
+LENOIR             54
+LINCOLN            55
+MACON              56
+MADISON            57
+MARTIN             58
+MCDOWELL           59
+MECKLENBURG        60
+MITCHELL           61
+MONTGOMERY         62
+MOORE              63
+NASH               64
+NEWHANOVER         65
+NORTHAMPTON        66
+ONSLOW             67
+ORANGE             68
+PAMLICO            69
+PASQUOTANK         70
+PENDER             71
+PERQUIMANS         72
+PERSON             73
+PITT               74
+POLK               75
+RANDOLPH           76
+RICHMOND           77
+ROBESON            78
+ROCKINGHAM         79
+ROWAN              80
+RUTHERFORD         81
+SAMPSON            82
+SCOTLAND           83
+STANLY             84
+STOKES             85
+SURRY              86
+SWAIN              87
+TRANSYLVANIA       88
+TYRRELL            89
+UNION              90
+VANCE              91
+WAKE               92
+WARREN             93
+WASHINGTON         94
+WATAUGA            95
+WAYNE              96
+WILKES             97
+WILSON             98
+YADKIN             99
+YANCEY             00
+***************************************************************************** */

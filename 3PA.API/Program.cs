@@ -1,6 +1,6 @@
-using _3PA.API.Controllers.PublicRecords;
+using _3PA.API.Controllers;
 using _3PA.API.OpenApiConfiguration;
-using _3PA.API.Services.PublicRecords.Conventions.Queries;
+using _3PA.API.Services.GeoData.CountyNameById.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
@@ -31,7 +31,6 @@ builder.Services.Configure<FormOptions>(options =>
   options.MemoryBufferThreshold = 300_000_000;
 });
 
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -60,7 +59,6 @@ builder.Services.AddSwaggerGen(options =>
   
 });
 
-
 var app = builder.Build();
 app.UseCors();
 // Configure the HTTP request pipeline.
@@ -69,7 +67,6 @@ if (app.Environment.IsDevelopment())
   app.UseSwagger();
   app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
