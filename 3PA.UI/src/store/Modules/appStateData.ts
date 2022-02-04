@@ -1,6 +1,6 @@
 import { Module, RegisterOptions, VuexModule } from "vuex-class-modules";
 import store from "@/store";
-import { ApiClient } from "@/connector/ApiClient";
+import { ApiClient } from "@/infrastructure/ApiClient";
 
 export interface IAppStateData{
   _api: ApiClient;

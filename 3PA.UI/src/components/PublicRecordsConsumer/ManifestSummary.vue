@@ -1,18 +1,20 @@
 <template>
   <div>
-    <app-body/>
+    <h2>ManifestSummary</h2>
+    
+
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import AppBody from "./components/AppBody.vue"
+
 
 @Component({
   components: {
-    AppBody
+
   },
 })
-export default class App extends Vue {
+export default class ManifestSummary extends Vue {
 
 }
 </script>

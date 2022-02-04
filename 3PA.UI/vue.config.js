@@ -24,6 +24,7 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
+            //Leftover from VS22 setting up the project?
             '^/weatherforecast': {
                 target: 'https://localhost:5001/'
             }
