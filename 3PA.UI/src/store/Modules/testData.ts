@@ -1,5 +1,5 @@
 import { Module, VuexModule, RegisterOptions } from 'vuex-class-modules';
-import { ApiClient } from '@/connector/ApiClient';
+import { ApiClient } from '@/infrastructure/ApiClient';
 import store from '..';
 
 export interface ITestData{}
