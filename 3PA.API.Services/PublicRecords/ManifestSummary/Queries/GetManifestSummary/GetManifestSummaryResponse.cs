@@ -1,7 +1,7 @@
-﻿using _3PA.API.Services.Users.ManifestSummary.Dtos;
+﻿using _3PA.API.Services.PublicRecords.ManifestSummary.Dtos;
 using _3PA.Data.Sql.Core;
 
-namespace _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary
+namespace _3PA.API.Services.PublicRecords.ManifestSummary.Queries.GetManifestSummary
 {
 	public class GetManifestSummaryResponse
 	{
