@@ -1,6 +1,6 @@
 using _3PA.API.Controllers;
 using _3PA.API.OpenApiConfiguration;
-using _3PA.API.Services.GeoData.CountyNames.Queries;
+using _3PA.API.Services.Geographic.CountyNames.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
@@ -20,7 +20,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
               x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); 
 
 // MediatR enabled projects
-builder.Services.AddMediatR(typeof(GeoDataController).GetTypeInfo().Assembly)
+builder.Services.AddMediatR(typeof(GeographicController).GetTypeInfo().Assembly)
                 .AddMediatR(typeof(CountyNamesHandler).GetTypeInfo().Assembly);
 
 //acceptable file sizes

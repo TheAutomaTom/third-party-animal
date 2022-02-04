@@ -26,7 +26,7 @@ namespace _3PA.Data.Sql.Fl
 		{
       // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
       //return base.GetManifestSummary(_context);          
-      var summary = new List<Manifest>();          
+      var summary = new List<Manifest>();
       if (_context.Database.CanConnect() && _context.Manifest.Any())      	
       {
         foreach (var entry in _context.Manifest)      	
@@ -38,10 +38,12 @@ namespace _3PA.Data.Sql.Fl
     }
     public async Task<Manifest> CommitRecords<T>(string fileName, IEnumerable<PublicRecordBase> publicRecords) where T : class
     {
+      Console.Clear();
+      base.printTitle();
       var updates = 0;
       var saves = 0;
       var t = new Tally(publicRecords.Count());
-      base.printTitle(t.Goal);
+      base.printHeaders(t.Goal);
 
       foreach (var x in publicRecords)
       {
@@ -121,7 +123,7 @@ namespace _3PA.Data.Sql.Fl
 
       Console.WriteLine("FINALIZING UPDATES...");
       updates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, updates, t.Goal - updates, UsState.Fl);
+      var results = new Manifest(fileName, updates, t.Goal - updates);
       await _context.Manifest.AddAsync(results);
 
         saves = _context.SaveChanges();

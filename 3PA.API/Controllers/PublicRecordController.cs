@@ -1,27 +1,28 @@
 ﻿using _3PA.API.Services.PublicRecords.Consumer.Commands;
 using _3PA.API.Services.PublicRecords.Consumer.Queries.GetCountyIdFromFilename;
+using _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary;
 using _3PA.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace _3PA.API.Controllers
 {
-  [Route("api/[Controller]")]
+	[Route("api/[Controller]")]
   [ApiController] //What does [ApiController] enable?
-  public class PublicRecordsController : Controller
+  public class PublicRecordController : Controller
   {
     readonly IMediator _mediator;
-    public PublicRecordsController(IMediator mediator)
+    public PublicRecordController(IMediator mediator)
     {
       _mediator = mediator;
     }
 
     ///<summary>Read public record file and write contents to local Sql</summary>
-    ///<param name="usState">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
-    ///<param name="category">Type of file: Voter Identities or Histories</param>
-    ///<param name="file">Publicly available voter data file</param>
+    ///<param name="usState">Two letter U.S. state identifier.</param>
+    ///<param name="category">Type of file: Voter Identities or Histories.</param>
+    ///<param name="file">Publicly available elections againcy voter data file.</param>
     /// <response code="200">Returns count of rows added to local db.</response>
     /// <response code="400">If there are errors completing the task</response>
-    [HttpPost("ReadToSql/{usState}/{category}")]
+    [HttpPost("ToSql/{usState}/{category}")]
     [RequestSizeLimit(bytes: 500_000_000)]
     public async Task<ActionResult> ReadFileToSql(UsState usState, Category category, IFormFile file)
     {
@@ -57,7 +58,12 @@ namespace _3PA.API.Controllers
       }
     }
 
-    [HttpGet("IdFromFileName/{usState}/{category}/{fileName}")]
+    ///<summary>Decode the county identifier from an elections agency's filename.</summary>
+    ///<remarks>This id is useful to cross reference for a proper name.</remarks>
+    ///<param name="usState">Two letter U.S. state identifier</param>
+    ///<param name="category">Type of file: Voter Identities or Histories.</param>
+    ///<param name="fileName">Name of publicly available elections againcy voter data file.</param>
+    [HttpGet("FileDescription/{usState}/{category}/{fileName}")]
     public async Task<ActionResult> GetIdFromFileName(UsState usState, Category category, string fileName)
 		{
 			try 
@@ -69,6 +75,23 @@ namespace _3PA.API.Controllers
         return BadRequest("Failed to get county Id from filename.");
       }
     }
+
+    ///<summary>Get a summary of all public records files processed.</summary>
+    [HttpGet("Manifest")]
+    public async Task<ActionResult> GetManifestSummary()
+    {
+      try
+      {
+        return Ok(await _mediator.Send(new GetManifestSummaryQuery()));
+      }
+      catch (Exception ex)
+      {
+        return BadRequest("Failled to get county data.");
+      }
+    }
+
+
+
 
 
   }

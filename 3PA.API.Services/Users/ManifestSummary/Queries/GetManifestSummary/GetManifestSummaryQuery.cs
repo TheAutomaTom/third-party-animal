@@ -9,5 +9,6 @@ namespace _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary
 {
 	public class GetManifestSummaryQuery : IRequest<GetManifestSummaryResponse>
 	{
+
 	}
 }

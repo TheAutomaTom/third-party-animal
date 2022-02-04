@@ -1,22 +1,45 @@
-﻿using System.Threading;
+﻿using _3PA.API.Services.Users.ManifestSummary.Dtos;
+using _3PA.Core.Models;
+using _3PA.Data.Sql.Core.Interfaces;
+using _3PA.Data.Sql.Fl;
+using _3PA.Data.Sql.Nc;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary
 {
 	public class GetManifestSummaryHandler : IRequestHandler<GetManifestSummaryQuery, GetManifestSummaryResponse>
-	{
-		public GetManifestSummaryHandler()
-		{
-		}
+  {
+    IPublicRecordsRepository repo { get; set; }
 
-		public async Task<GetManifestSummaryResponse> Handle(GetManifestSummaryQuery request, CancellationToken cancellationToken)
-		{
-			throw new NotImplementedException();
-		}
-	}
+    public Task<GetManifestSummaryResponse> Handle(GetManifestSummaryQuery request, CancellationToken cancellationToken)
+    {
+      var summary = new List<ManifestSummaryDto>();
+      //Enumerate states enum
+      foreach (UsState usState in (UsState[])Enum.GetValues(typeof(UsState)))
+      {
+        switch (usState)
+        {          
+          case UsState.Fl:            
+            using (repo = new FlRepository())
+            {
+              summary.Add( new ManifestSummaryDto(UsState.Fl, repo.GetManifestSummary() ));
+            }
+          break;
+
+          case UsState.Nc:
+            using (repo = new NcRepository())
+            {
+              summary.Add(new ManifestSummaryDto(UsState.Nc, repo.GetManifestSummary()));
+            }
+            break;
+
+          default:
+            throw new NotImplementedException($"UsState {usState} has no Manifest table implemented.");
+        }
+      }
+      var response = new GetManifestSummaryResponse(summary);
+      return Task.FromResult(response);
+
+    }
+  }
 }

@@ -52,10 +52,12 @@ namespace _3PA.Data.Sql.Nc
 
     public async Task<Manifest> CommitRecords<T>(string fileName, IEnumerable<PublicRecordBase> publicRecords) where T : class
     {
+      Console.Clear();
+      base.printTitle();
       var updates = 0;
       var saves = 0;
       var t = new Tally(publicRecords.Count());
-      base.printTitle(t.Goal);
+      base.printHeaders(t.Goal);
 
       foreach (var x in publicRecords)
       {
@@ -134,7 +136,7 @@ namespace _3PA.Data.Sql.Nc
 
       Console.WriteLine("FINALIZING UPDATES...");
       updates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, updates, t.Goal - updates, UsState.Nc);
+      var results = new Manifest(fileName, updates, t.Goal - updates);
       await _context.Manifest.AddAsync(results);
       saves = _context.SaveChanges();
       return results;

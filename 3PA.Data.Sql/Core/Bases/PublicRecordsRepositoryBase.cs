@@ -1,14 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _3PA.Data.Sql.Core.Bases
+﻿namespace _3PA.Data.Sql.Core.Bases
 {
-  public class PublicRecordsRepositoryBase
+	public class PublicRecordsRepositoryBase
   {
-    internal void printTitle(int goal)
+    internal void printTitle(string subtext = "Our Voter Data API v220107")
+    {
+
+      Console.ForegroundColor = ConsoleColor.Blue;
+      Console.Write("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄-~▄▄─ ▄█_ ▄▀~─");
+
+      Console.ForegroundColor = ConsoleColor.Blue;
+      Console.Write("█─▄─▄─█─█─█▄─██▄─▄▄▀█▄─▄▄▀█");
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("██▄─▄▄─██▀▄─▄█▄─▄▄▀█─▄─▄─█─▄─▄─█▄─█─▄████▀▄─▄█▄─▀█▄─▄█▄─██▄─▀█▀─▄██▀▄─▄█▄─▄███▄─~");
+
+      Console.ForegroundColor = ConsoleColor.Blue;
+      Console.Write("███─███─▄─██─███─▄─▄██─██─█");
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("███─▄▄▄██─▀─███─▄─▄███─█████─████▄─▄█████─▀─███─█▄▀─███─███─█▄█─███─▀─███─██▀█▄▄▄─");
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("██▄▄▄██▄█▄█▄▄▄█▄▄█▄▄█▄▄▄▄█████▄████▄▄█▄▄█▄▄█▄▄██▄▄▄███▄▄▄███▄▄█████▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄─`");
+      Console.BackgroundColor = ConsoleColor.Red;
+      Console.ForegroundColor = ConsoleColor.Black;
+      var subtextLine = ("                                                                          ▄  ▄ █▀._▀ █▀  ▄.▄▀▄▀▄▀▄─~ ▄█▄██");
+      Console.WriteLine($"  {subtext}{subtextLine.Remove(0, subtext.Length)}");
+      Console.ResetColor();
+      Console.WriteLine("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ▀   ▀ ▀ ▀     ▀~─ ▀─._  .▀~-   ");
+    }
+    internal void printHeaders(int goal)
     {
       Console.WriteLine($"Processing {goal.ToString("N0")} records...");
       Console.WriteLine("{0,-20}{1,-20}{2,-20}", "PROGRESS", "ADDITIONS", "PROJECTION");
