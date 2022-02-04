@@ -13,6 +13,8 @@
 3PA.Core/obj/
 3PA.Queue/bin/
 3PA.Queue/obj/
+3PA.Tests/bin/
+3PA.Tests/obj/
 
 # Projects not yet shared
 3PA.Queue/
