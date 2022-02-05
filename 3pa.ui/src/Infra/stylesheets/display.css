@@ -1,0 +1,30 @@
+* {
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+
+html, body {
+    background: #07038C;
+    margin: 0;
+}
+
+.grid-item,
+header,
+main,
+nav,
+aside,
+footer {
+    background: #044BD9;
+    color: white;
+    border: 1px solid #377EFF;
+}
+
+a {
+    color: white;
+}
+
+a:active, :focus {
+    outline: 2px solid white;
+    background: purple;
+}

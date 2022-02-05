@@ -1,0 +1,17 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 15em auto 15em;
+    grid-template-rows: min-content auto min-content;
+    max-width: 80em;
+    margin: auto;
+}
+
+header, footer {
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
