@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./Infrastructure/router/index";
-import { store } from "./Infrastructure/store/index";
+import router from "./Infra/router/index";
+import { store } from "./Infra/store/index";
 
 createApp(App)
 	.use(store)

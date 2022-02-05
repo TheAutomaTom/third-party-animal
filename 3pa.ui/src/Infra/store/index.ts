@@ -1,4 +1,4 @@
 import Vuex from "vuex";
 
 export const store = new Vuex.Store({});
-// stores are registered from their export statements
+// modules are registered from each's export statement
