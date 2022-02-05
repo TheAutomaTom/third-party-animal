@@ -1,9 +1,9 @@
 <template>
-  <div class="about">
-    <span>About!</span>
+  <div>
+    <h2>PublicRecordsConsumerBody</h2>
+
   </div>
 </template>
-
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
@@ -12,8 +12,10 @@ import { Options, Vue } from 'vue-class-component';
     msg: String
   }
 })
-export default class About extends Vue{
-
+export default class PublicRecordsConsumerBody extends Vue{
 
 }
 </script>
+
+<style>
+</style>

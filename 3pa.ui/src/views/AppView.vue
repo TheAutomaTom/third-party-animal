@@ -1,9 +1,6 @@
 <template>
-  <div class="about">
-    <span>About!</span>
-  </div>
+    <router-view/>
 </template>
-
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
@@ -12,8 +9,10 @@ import { Options, Vue } from 'vue-class-component';
     msg: String
   }
 })
-export default class About extends Vue{
-
+export default class AppBody extends Vue{
 
 }
 </script>
+
+<style>
+</style>
