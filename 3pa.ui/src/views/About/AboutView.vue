@@ -1,21 +1,23 @@
 <template>
-  <div>
-    <h2>AboutBody</h2>
-
+  <div class="about">
+    <span>About!</span>
+    <p>{{message}}</p>
   </div>
 </template>
+
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
+import { AppStateModule } from "@/Infrastructure/store/Modules/appStateData"
 
 @Options({
   props: {
     msg: String
   }
 })
-export default class AboutBody extends Vue{
+export default class About extends Vue{
+get message(){
+  return AppStateModule.testMessage;
+}
 
 }
 </script>
-
-<style>
-</style>
