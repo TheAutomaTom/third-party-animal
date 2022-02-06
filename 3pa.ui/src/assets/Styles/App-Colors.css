@@ -1,0 +1,117 @@
+:root{
+  --bgc-lighter: #2d412d;
+  --bgc-light: #1b271b;
+  --bgc-dark: #0d0f0a;
+  --fontc-typical: rgba(128,255,128,0.8);
+  --fontc-light: rgba(197, 255, 158, 0.8);
+  --fontc-lighter: rgba(235, 255, 164, 0.8);
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#576d57+0,0d0f0a+77 */
+  --bg-rad-moz: -moz-radial-gradient(center, ellipse cover,  var(--bgc-light) 0%, var(--bgc-dark) 77%); /* FF3.6-15 */
+  --bg-rad-webkit: -webkit-radial-gradient(center, ellipse cover,  var(--bgc-light) 0%,var(--bgc-dark) 77%); /* Chrome10-25,Safari5.1-6 */
+  --bg-rad-safari: radial-gradient(ellipse at center,  var(--bgc-light) 0%,var(--bgc-dark) 77%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  --bg-rad-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=var(--bgc-light), endColorstr=var(--bgc-dark), GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+html, body, form, fieldset, table, tr, td, img, button {
+  font-family: monospace;
+  font-size: 1.2em;
+  color: var(--fontc-typical);
+}
+html, body {
+  scrollbar-color: var(--bgc-light) var(--bgc-dark);
+  background: var(--bg-rad-moz);
+  background: var(--bg-rad-webkit);
+  background: var(--bg-rad-safari);
+  filter: var(--bg-rad-filter);
+} 
+
+a{
+  color: inherit;
+}
+a:link {    
+  text-decoration: none;
+}
+a:hover {
+  color: var(--fontc-light);
+    text-decoration: underline;
+} 
+
+ul {
+  list-style-type: circle;
+}
+
+button {
+  background-color: var(--bgc-light);
+  border-color: var(--bgc-light);
+  border-radius: 3px;
+}
+button:hover {
+  background-color: var(--bgc-lighter);
+}
+button>h1:hover, button>h2:hover, button>h3:hover, button>h4:hover, button>h5:hover, button>h6:hover, button>a:hover {
+  color: var(--fontc-light);
+}
+button:active, button>h1:active, button>h2:active, button>h3:active, button>h4:active, button>h5:active, button>h6:active, button>a:active {
+  color: var(--fontc-lighter);
+}
+
+hr {
+  height: 3px;
+  background-color: var(--bgc-dark);
+  border: none;
+}
+
+.grid {
+  /* Horizontal Dark to Light */
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/var(--bgc-dark)+0,1b271b+14,1b271b+100 */
+  background: var(--bgc-dark); /* Old browsers */
+  background: -moz-linear-gradient(-45deg,  var(--bgc-dark) 0%, var(--bgc-light) 14%, var(--bgc-light) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg,  var(--bgc-dark) 0%,var(--bgc-light) 14%,var(--bgc-light) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg,  var(--bgc-dark) 0%,var(--bgc-light) 14%,var(--bgc-light) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--bgc-dark)', endColorstr='var(--bgc-light)',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.header, .footer {  
+  /* Horizontal Dark to Light */
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/var(--bgc-dark)+0,1b271b+100,1b271b+100 */
+  background: var(--bgc-dark); /* Old browsers */
+  background: -moz-linear-gradient(left,  var(--bgc-dark) 0%, var(--bgc-light) 100%, var(--bgc-light) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left,  var(--bgc-dark) 0%,var(--bgc-light) 100%,var(--bgc-light) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right,  var(--bgc-dark) 0%,var(--bgc-light) 100%,var(--bgc-light) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--bgc-dark)', endColorstr='var(--bgc-light)',GradientType=1 ); /* IE6-9 */
+} 
+
+.router-view{
+  /* Horizontal Light to Dark */
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/var(--bgc-light)+0,1b271b+0,0d0f0a+84,0d0f0a+100 */
+  background: var(--bgc-light); /* Old browsers */
+  background: -moz-linear-gradient(left,  var(--bgc-light) 0%, var(--bgc-light) 0%, var(--bgc-dark) 84%, var(--bgc-dark) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left,  var(--bgc-light) 0%,var(--bgc-light) 0%,var(--bgc-dark) 84%,var(--bgc-dark) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right,  var(--bgc-light) 0%,var(--bgc-light) 0%,var(--bgc-dark) 84%,var(--bgc-dark) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--bgc-light)', endColorstr='var(--bgc-dark)',GradientType=1 ); /* IE6-9 */
+}
+
+/* Cool CRT Scanline effect... */
+/* http://aleclownes.com/2017/02/01/crt-display.html */
+.crt-screen::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: 
+    linear-gradient(
+      rgba(18, 16, 16, 0) 50%, 
+      rgba(0, 0, 0, 0.25) 50%), 
+    linear-gradient(
+      90deg, 
+      rgba(255, 0, 0, 0.06), 
+      rgba(0, 255, 0, 0.02), 
+      rgba(0, 0, 255, 0.06)
+    );
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}

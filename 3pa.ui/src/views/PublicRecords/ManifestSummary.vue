@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>ManifestSummary</h2>
+    <h3>ManifestSummary</h3>
   </div>
 </template>
 <script lang="ts">

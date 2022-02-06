@@ -11,8 +11,9 @@
         █▀▄─▄█─▀█▄─█▄▄██─▀█▀─██▀▄─█▄─▄███▄─~<br >
         █─▀─██─█▄▀─██─██─█─█─██─▀─██─██▀█▄▄▄─<br>
         █▄█▄▄█▄███▄█▄▄▄█▄███▄▄█\▄█▄██▄▄▄▄▄\^─.<br>
-        Our Voter Data Aggrigator - 2022        
+        
     </span>
+    <span> Our Voter Data Aggrigator - 2022</span>
   </div>
 </template>
 
@@ -33,6 +34,6 @@ export default class HomeView extends Vue{
 .ascii{
     margin: 0;
     padding: 0;
-    font: 100%/150% serif;
+    font: 150% monospaced;
 }
 </style>
