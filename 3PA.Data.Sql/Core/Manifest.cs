@@ -11,14 +11,14 @@ namespace _3PA.Data.Sql.Core
     public Manifest(string fileName, int validated, int orphaned )
     {
       FileName = fileName;
-      Updated = DateTime.Now;
+      Date = DateTime.Now;
       Validated = validated;  
       Orphaned = orphaned;
     }
 
     [Key]
     public string FileName { get; set; }
-    public DateTime Updated { get; set; }
+    public DateTime Date { get; set; }
     public int Validated { get; set; }
     public int Orphaned { get; set; }
 
