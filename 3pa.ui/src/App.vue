@@ -24,7 +24,6 @@
         </section>
       </div>
 
-
       <div class="footer">
         <div class="nav-title">
           <router-link to="/">Third Party Animal</router-link> 
@@ -39,16 +38,10 @@
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-//import  "./Infra/stylesheets/display.css"
-//import  "./Infra/stylesheets/css-grid.css"
 
 @Options({})
-export default class About extends Vue{
-
-
-}
+export default class About extends Vue{}
 </script>
-
 
 <style lang="css">
   html, body {
@@ -100,4 +93,17 @@ export default class About extends Vue{
     grid-column-end: 4;
     background-color: #27272b;
   }
+
+  html, body, form, fieldset, table, tr, td, img {
+    margin: 0;
+    padding: 0;
+    font: 100%/150% calibri,helvetica,sans-serif;
+}
+
+input, button, select, textarea, optgroup, option {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+}
 </style>
