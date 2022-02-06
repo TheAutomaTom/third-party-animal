@@ -1,6 +1,6 @@
 using _3PA.API.Controllers;
 using _3PA.API.OpenApiConfiguration;
-using _3PA.API.Services.Geographic.CountyNames.Queries;
+using _3PA.API.Services.PublicRecords.CountyNames.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
@@ -11,16 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Cors Policy
 builder.Services.AddCors(o => {
-  o.AddDefaultPolicy( builder => {
-      builder.WithOrigins( /*List 3pa.ui's address(es):*/"https://localhost:5002"); });
+  o.AddDefaultPolicy( builder => {    
+    builder.WithOrigins( "*"
+      //List 3pa.ui address(es):      
+      //"https://localhost:8080",
+      //"http://localhost:8080/public-records/consumer"
+      ); 
+  });
 });
 
 // Add services to the container
 builder.Services.AddControllers().AddJsonOptions(x =>
-              x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); 
+              x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 // MediatR enabled projects
-builder.Services.AddMediatR(typeof(GeographicController).GetTypeInfo().Assembly)
+builder.Services.AddMediatR(typeof(PublicRecordController).GetTypeInfo().Assembly)
                 .AddMediatR(typeof(CountyNamesHandler).GetTypeInfo().Assembly);
 
 //acceptable file sizes

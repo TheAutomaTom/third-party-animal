@@ -1,6 +1,8 @@
-﻿using _3PA.API.Services.PublicRecords.Consumer.Commands;
+﻿using _3PA.API.Services.PublicRecords.CountyNameById.Queries;
+using _3PA.API.Services.PublicRecords.CountyNames.Queries;
+using _3PA.API.Services.PublicRecords.Consumer.Commands;
 using _3PA.API.Services.PublicRecords.Consumer.Queries.GetCountyIdFromFilename;
-using _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary;
+using _3PA.API.Services.PublicRecords.ManifestSummary.Queries.GetManifestSummary;
 using _3PA.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -63,10 +65,10 @@ namespace _3PA.API.Controllers
     ///<param name="usState">Two letter U.S. state identifier</param>
     ///<param name="category">Type of file: Voter Identities or Histories.</param>
     ///<param name="fileName">Name of publicly available elections againcy voter data file.</param>
-    [HttpGet("FileDescription/{usState}/{category}/{fileName}")]
+    [HttpGet("Describe/{usState}/{category}/{fileName}")]
     public async Task<ActionResult> GetIdFromFileName(UsState usState, Category category, string fileName)
-		{
-			try 
+    {
+      try
       {
         return Ok(_mediator.Send(new GetCountyIdFromFilenameQuery(usState, category, fileName)));
       }
@@ -90,8 +92,37 @@ namespace _3PA.API.Controllers
       }
     }
 
+    ///<summary>Get a dictionary with a UsState's counties' elections agencies's id codes and proper names</summary>
+    ///<param name="usState">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
+    /// <response code="200">A dictionary of county ids and proper names.</response>    
+    [HttpGet("Counties/Dictionary/{usState}")]
+    public async Task<ActionResult> GetCountyNames(UsState usState)
+    {
+      try
+      {
+        return Ok(await _mediator.Send(new CountyNamesQuery(usState)));
+      }
+      catch (Exception ex)
+      {
+        return BadRequest("Failled to get county data.");
+      }
+    }
 
-
+    ///<summary>Get a UsState county's proper name based on elections agency's id code.</summary>
+    ///<param name="usState">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
+    ///<param name="countyId">Public records' county identifier used in file names.  Could be numbers or letters.</param>
+    [HttpGet("Counties/NameFromId/{usState}/{countyId}")]
+    public async Task<ActionResult> GetCountyNameById(UsState usState, string countyId)
+    {
+      try
+      {
+        return Ok(await _mediator.Send(new CountyNameByIdQuery(usState, countyId)));
+      }
+      catch (Exception)
+      {
+        return BadRequest("Failled to get county data.");
+      }
+    }
 
 
   }

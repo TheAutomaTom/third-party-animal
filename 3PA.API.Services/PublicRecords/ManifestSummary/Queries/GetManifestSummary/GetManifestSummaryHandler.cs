@@ -1,4 +1,5 @@
 ﻿using _3PA.API.Services.PublicRecords.ManifestSummary.Dtos;
+using _3PA.API.Services.PublicRecords.ManifestSummary.Queries.GetManifestSummary;
 using _3PA.Core.Models;
 using _3PA.Data.Sql.Core.Interfaces;
 using _3PA.Data.Sql.Fl;

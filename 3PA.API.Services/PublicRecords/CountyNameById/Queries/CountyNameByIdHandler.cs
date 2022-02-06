@@ -2,7 +2,7 @@
 using _3PA.Core.Models.Fl;
 using _3PA.Core.Models.Nc;
 using MediatR;
-namespace _3PA.API.Services.Geographic.CountyNameById.Queries
+namespace _3PA.API.Services.PublicRecords.CountyNameById.Queries
 {
 	public class CountyNameByIdHandler : IRequestHandler<CountyNameByIdQuery, CountyNameByIdResponse>
   {
