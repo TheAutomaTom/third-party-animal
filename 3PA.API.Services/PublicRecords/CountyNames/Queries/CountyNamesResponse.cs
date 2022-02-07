@@ -7,10 +7,10 @@ namespace _3PA.API.Services.PublicRecords.CountyNames.Queries
 		public CountyNamesResponse(UsState usState, IDictionary<string, string> countiesDictionary)
 		{
 			UsState = usState.ToString();
-			CountiesDictionary = countiesDictionary;
+			Counties = countiesDictionary;
 		}
 		public string UsState { get; set; }
-		public IDictionary<string, string> CountiesDictionary { get; set; }
+		public IDictionary<string, string> Counties { get; set; }
 
 	}
 }

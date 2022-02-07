@@ -1,9 +1,6 @@
-export type CountiesDictionary = {
-	UsState: string;
-	Dictionary: [{
-		id: string,
-		name: string
-	}]
+export type CountiesDictionaryDto = {
+	usState: string;
+	counties: Map<string, string>;
 }
 
 export type ManifestSummaryDto = {
@@ -16,5 +13,9 @@ export type Manifest = {
 	Date: string
 	Validated: number;
 	Orphaned: number;
-
+}
+export type CountyIdToNameDto = {
+	countyId: string;
+	properName: string;
+	usState: string;
 }

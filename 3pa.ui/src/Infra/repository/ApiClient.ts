@@ -14,19 +14,19 @@ export class ApiClient{
     });
   }
   
-  async getCountyNamesDictionary(usState: string){
+  async getCountyNamesDictionary(usState: string): Promise<pub.CountiesDictionaryDto> {
     const res = await this.get(`${ this._baseUrl }/PublicRecord/Counties/Dictionary/${usState}`);
     if (res.ok) {
-      return await res.json() as pub.CountiesDictionary;
+      return await res.json() as pub.CountiesDictionaryDto;
     } else {
       throw Error(res.statusText);
     }
   }
 
-  async getCountyNameFromId(usState: string, countyId: string){
+  async getCountyNameFromId(usState: string, countyId: string): Promise<pub.CountyIdToNameDto>{
     const res = await this.get(`${ this._baseUrl }/PublicRecord/Counties/NameFromId/${usState}/${countyId}`);
     if (res.ok) {
-      return await res.json() as string;
+      return await res.json() as pub.CountyIdToNameDto;
     } else {
       throw Error(res.statusText);
     }

@@ -1,19 +1,23 @@
 <template>
   <div>
     <h4>3PA.API Test Harness</h4>
-    <api-control/>
-    <api-control/>
+
+    <api-get-counties/>
+    <api-get-county-name-from-id/>
+
   </div>
-  <manifest-summary/>
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { PublicRecordsModule } from "@/Infra/store/Modules/PublicRecordsData"
-import apiControl from "@/Views/_components/apiControl.vue"
+import apiGetCounties from "./apiGetCounties.vue"
+import apiGetCountyNameFromId from "./apiGetCountyNameFromId.vue"
+
 @Options({
   components: {
     PublicRecordsModule,
-    apiControl
+    apiGetCounties,
+    apiGetCountyNameFromId
   }
 })
 export default class ApiPhonebookView extends Vue{

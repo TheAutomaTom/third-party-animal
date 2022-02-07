@@ -5,30 +5,24 @@
     <div class="title=wrapper">      
       <button class="title-button"
         type="button"
-        @click="ApiCalled"
+        @click="this.$emit('api-called')"
       >
         <h3>
-          GET /api/PublicRecord/Counties/Dictionary/{{usState}}
+          <slot name="call-name"/>
         </h3>
       </button>
     </div>
 
 <!-- INPUTS.................................................... -->
-    <div class="inputs-wrapper">    
-      
-      <input type="radio" id="Fl" name="UsState" value="Fl">
-        <label for="html">Florida</label>
-      
-      <input type="radio" id="Nc" name="UsState" value="Nc">
-        <label for="css">North Carolina</label>
-
+    <div class="inputs-wrapper">
+          <slot name="inputs"/>
     </div>
 
 <!-- RESPONSE.................................................. -->
     <div class="response-wrapper">
-      <span id="response-field">
-        "..."
-      </span>
+      <p id="response-field">
+          <slot name="response"/>
+      </p>
     </div>
         
 	</div>
@@ -37,32 +31,32 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
+
 @Options({})
-export default class ApiControl extends Vue{
-  url="wtf";
-  ApiCalled(){
-    console.warn(`ApiCalled: ${this.url}`);
-  }
-}
+export default class ApiControl extends Vue{}
 </script>
 
 <style>
 .api-control {
   width: auto;
   padding: 0.2em;
-  /* 
-  display: grid;
-  grid-gap: 5px;
-  grid-template-columns: 12em auto;
-  grid-template-rows: 1.5em 1.5em auto min-content;
-  width: 80em;
-  
-  */
 }  
 .api-control button{
   width: auto;
   margin: auto; 
   text-align: left;
 }  
+
+.inputs-wrapper{
+  padding-left: 1em;
+}
+.response-wrapper{
+  margin: 0.5em 1em;
+  background-color: var(--bgc-dark);
+}
+.response-wrapper>p{
+  margin-left: 1em;
+  padding: 0.25em;
+}
 
 </style>

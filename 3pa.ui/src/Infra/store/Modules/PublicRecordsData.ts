@@ -4,6 +4,7 @@ import { ApiClient } from "../../repository/ApiClient"
 
 export interface IPublicRecordsData{
   _api: ApiClient;
+  UsStates: {id: string, name: string}[];
 }
 
 @Module
@@ -16,8 +17,12 @@ class PublicRecords extends VuexModule implements IPublicRecordsData{
 		
   }
 
-
-
+  get UsStates(){ 
+    return [
+      {id: "Fl", name: "Florida"},
+      {id: "Nc", name: "North Carolina"}
+    ]
+  }
 
 }
 
