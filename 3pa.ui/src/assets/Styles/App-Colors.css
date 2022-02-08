@@ -45,6 +45,17 @@ button {
   border-color: var(--bgc-light);
   border-radius: 3px;
 }
+input[type="text"]{
+  background-color: var(--bgc-dark);
+  color: var(--fontc-typical);
+  border-color: var(--bgc-lighter);
+}
+input[type="text"]:focus-visible{
+  background-color: var(--bgc-light);
+  color: var(--fontc-lighter);
+  border-color: var(--bgc-lighter);
+  outline: none;
+}
 button:hover {
   background-color: var(--bgc-lighter);
 }

@@ -6,14 +6,26 @@ html, body, form, fieldset, table, tr, td, img, p, span, ul, button {
   height: 100%;
 }
 li{
-  padding-top: 0.25em;
+  padding-top: 0.25em; 
+}
+label, td{
+  padding-top: 0;
+  font-size: 0.9em;
 }
 button {
   padding: 0.05em 0.5em;
 }
+input[type="text"]{
+  font-size: 0.85em;
+}
+
 hr{
   margin-top: 0.2em;
 }
+td{
+  font-size: 0.75em;
+}
+
 .grid {
   display: grid;
   grid-gap: 5px;

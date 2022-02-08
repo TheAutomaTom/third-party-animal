@@ -5,10 +5,10 @@ export type CountiesDictionaryDto = {
 
 export type ManifestSummaryDto = {
 	UsState: string;
-	Manifests: Manifest[];
+	Manifests: ManifestDto[];
 }
 
-export type Manifest = {	
+export type ManifestDto = {	
 	FileName: string;
 	Date: string
 	Validated: number;

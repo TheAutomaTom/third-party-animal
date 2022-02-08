@@ -1,11 +1,11 @@
 <template>
-	<div v-for="state in usStates" :key="state.id">
+	<div v-for="state in usStates" :key="state.id" class="wrapper">
 		<input type="radio"
-			:value="state.id"
-			:name="`selectUsState-${controlId}`"
 			@input="this.$emit('us-state-selected', $event.target.value)"
+			:name="`selectUsState-${controlId}`"
+			:value="state.id"
 		>
-		<label :for="`selectUsState-${controlId}`">{{state.name}}</label><br>
+		<label>{{state.name}}</label><br>
 		
 	</div>
 </template>
@@ -25,6 +25,12 @@ export default class selectUsState extends Vue{
 	}
 }
 </script>
-<style>
-
+<style scoped>
+.wrapper{
+	margin: 0.25em;
+	font-size: 1.25em;
+}
+input[type="radio"]{
+	margin: 0.5em 1em;
+}
 </style>

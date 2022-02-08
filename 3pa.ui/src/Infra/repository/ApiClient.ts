@@ -67,7 +67,7 @@ export class ApiClient{
     });
 
     if (res.ok) {
-      return await res.json() as pub.Manifest;
+      return await res.json() as pub.ManifestDto;
     } else {
       throw Error(res.statusText);
     }

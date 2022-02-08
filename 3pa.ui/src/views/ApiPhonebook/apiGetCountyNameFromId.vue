@@ -4,6 +4,7 @@
 
 		<template v-slot:inputs>
 			<select-us-state @us-state-selected="inputUsState=$event" controlId="apiGetCountyNameFromId"/>
+			<span style="margin-left:1.5em;font-size:1.2em;">County Id:</span>
 			<input type="text" v-model="inputCountyId"/>
 		</template>
 

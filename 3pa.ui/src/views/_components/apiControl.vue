@@ -19,8 +19,8 @@
     </div>
 
 <!-- RESPONSE.................................................. -->
-    <div class="response-wrapper">
-      <p id="response-field">
+    <div class="response-wrapper" >
+      <p id="response-field" >
           <slot name="response"/>
       </p>
     </div>
@@ -56,7 +56,8 @@ export default class ApiControl extends Vue{}
 }
 .response-wrapper>p{
   margin-left: 1em;
-  padding: 0.25em;
+  padding: 1em 0.25em;
+  
 }
 
 </style>
