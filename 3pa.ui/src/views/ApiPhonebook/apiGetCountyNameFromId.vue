@@ -19,8 +19,8 @@
 import { Options, Vue } from 'vue-class-component';
 import { PublicRecordsModule } from "@/Infra/store/Modules/PublicRecordsData";
 import { CountyIdToNameDto } from '@/Infra/repository/Dtos/PublicRecordsDtos';
-import apiControl from "@/Views/_components/apiControl.vue";
-import selectUsState from "@/Views/_components/selectUsState.vue";
+import apiControl from "@/views/_components/apiControl.vue";
+import selectUsState from "@/views/_components/selectUsState.vue";
 
 @Options({
   components: {
