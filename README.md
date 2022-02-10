@@ -54,3 +54,9 @@
 - Use Elastic Search to compose efficient methods to identify likely third-party votes.
 
     
+
+## New Clones' Initialization
+`3PA.UI` _User Facing, Browser-Based Web App_
+1. Open folder `...\3pa.ui\src`
+1. In the terminal, run `yarn` to update Node packages
+1. 

@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./Infra/router/index";
-import { store } from "./Infra/store/index";
+import router from "./infra/router/index";
+import { store } from "./infra/store/index";
 
 const _app = createApp(App);
 
