@@ -8,7 +8,6 @@
           <router-link to="/">Third Party Animal</router-link>
         </div>
         <div class="nav-links">
-          <router-link to="/public-records">Public Records</router-link> |
           <router-link to="/about">About 3PA</router-link> 
         </div>
       </div>
@@ -16,7 +15,7 @@
       <div class="left-side">
         <ul>
           <li><router-link to="/api-phonebook">Api Phonebook</router-link></li>
-          <li><router-link to="/public-records">Public Records</router-link></li>
+          <li style="text-decoration: line-through;"><router-link to="/public-records">Public Records</router-link></li>
           <li><router-link to="/about">  About 3PA</router-link> </li>
         </ul>
       </div>
@@ -32,7 +31,6 @@
           <router-link to="/">Third Party Animal</router-link> 
         </div>
         <div class="nav-links">
-          <router-link to="/public-records">Public Records</router-link> |
           <router-link to="/about">About 3PA</router-link> 
         </div>
       </div>
