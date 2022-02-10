@@ -1,0 +1,62 @@
+html, body, form, fieldset, table, tr, td, img, p, span, ul, h1, h2, h3, h4, h5, h6, a, button, hr {
+  margin: 0;
+  padding: 0;
+}
+html, body, form, fieldset, table, tr, td, img, p, span, ul, button {
+  height: 100%;
+}
+li{
+  padding-top: 0.25em; 
+}
+label, td{
+  padding-top: 0;
+  font-size: 0.9em;
+}
+button {
+  padding: 0.05em 0.5em;
+}
+input[type="text"]{
+  font-size: 0.85em;
+}
+
+hr{
+  margin-top: 0.2em;
+}
+td{
+  font-size: 0.75em;
+}
+
+.grid {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 12em auto;
+  grid-template-rows: 1.5em auto min-content;
+  height: 99.5vh;
+  max-width: 80em;
+  margin: auto;
+}  
+.header, .footer {
+  grid-column-start: 1;
+  grid-column-end: 4;
+  height: auto;
+  padding: 0.2em 0.5em;
+} 
+.router-view{  
+  grid-column-start: 2;
+  grid-column-end: 4;
+  padding-top: 0.5em;
+}
+.left-side{
+  padding-left: 1.8em;
+  margin-top: .2em;
+  grid-column-start: 1;
+  grid-column-end: 1;    
+}
+
+.nav-title{
+  float: left;
+  font-size: 1.5em;  
+}
+.nav-links{
+  float: right;    
+}

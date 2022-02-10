@@ -4,13 +4,13 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
 {
   public class ReadFileToSqlResponse
   {
-    public ReadFileToSqlResponse(Manifest manifest)
+    public ReadFileToSqlResponse(Data.Sql.Core.Manifest manifest)
     {
       Results = manifest;
 
     }
 
-    public Manifest Results { get; set; }
+    public Data.Sql.Core.Manifest Results { get; set; }
 
 
   }

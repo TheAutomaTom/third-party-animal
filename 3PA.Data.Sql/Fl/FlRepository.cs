@@ -127,7 +127,8 @@ namespace _3PA.Data.Sql.Fl
       await _context.Manifest.AddAsync(results);
 
         saves = _context.SaveChanges();
-      
+      Console.WriteLine($"{fileName} has been processed!\n");
+
       return results;
 
     }

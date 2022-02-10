@@ -5,10 +5,10 @@ namespace _3PA.API.Services.PublicRecords.ManifestSummary.Queries.GetManifestSum
 {
 	public class GetManifestSummaryResponse
 	{
-		public GetManifestSummaryResponse(List<ManifestSummaryDto> manifestSummary )
+		public GetManifestSummaryResponse(List<ManifestSummaryByUsStateDto> manifestSummary )
 		{
-			ManifestSummary = manifestSummary;
+			ManifestSummaries = manifestSummary;
 		}
-		public List<ManifestSummaryDto> ManifestSummary { get; set; }
+		public List<ManifestSummaryByUsStateDto> ManifestSummaries { get; set; }
 	}
 }

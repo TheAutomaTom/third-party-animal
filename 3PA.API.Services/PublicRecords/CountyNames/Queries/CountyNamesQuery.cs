@@ -1,7 +1,7 @@
 ﻿using _3PA.Core.Models;
 using MediatR;
 
-namespace _3PA.API.Services.Geographic.CountyNames.Queries
+namespace _3PA.API.Services.PublicRecords.CountyNames.Queries
 {
 	public class CountyNamesQuery: IRequest<CountyNamesResponse>
 	{
