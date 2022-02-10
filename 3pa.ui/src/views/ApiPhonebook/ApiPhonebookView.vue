@@ -10,7 +10,7 @@
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { PublicRecordsModule } from "@/Infra/store/Modules/PublicRecordsData";
+import { PublicRecordsModule } from "@/infra/store/Modules/PublicRecordsData";
 import apiGetCounties from "./apiGetCounties.vue";
 import apiGetCountyNameFromId from "./apiGetCountyNameFromId.vue";
 import apiGetManifestSummary from "./apiGetManifestSummary.vue";

@@ -1,13 +1,13 @@
 <template>
   <div class="about">
-    <span>About!</span>
-    <p>{{message}}</p>
+    <p>Thanks for reviewing 3PA!</p>
+    <p>Check out more on <a href="https://github.com/TheAutomaTom/third-party-animal">Github!</a></p>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { AppStateModule } from "@/Infra/store/Modules/appStateData"
+import { AppStateModule } from "@/infra/store/Modules/appStateData"
 
 @Options({
   props: {
@@ -15,9 +15,6 @@ import { AppStateModule } from "@/Infra/store/Modules/appStateData"
   }
 })
 export default class About extends Vue{
-get message(){
-  return AppStateModule.testMessage;
-}
 
 }
 </script>

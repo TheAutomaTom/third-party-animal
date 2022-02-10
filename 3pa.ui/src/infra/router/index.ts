@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // Pages...
-import HomeView from "@/Views/Home/HomeView.vue"
-import AboutView from "@/Views/About/AboutView.vue"
-import PublicRecordsView from "@/Views/PublicRecords/PublicRecordsView.vue"
-import ApiPhonebookView from "@/Views/ApiPhonebook/ApiPhonebookView.vue"
+import HomeView from "@/views/Home/HomeView.vue"
+import AboutView from "@/views/About/AboutView.vue"
+import PublicRecordsView from "@/views/PublicRecords/PublicRecordsView.vue"
+import ApiPhonebookView from "@/views/ApiPhonebook/ApiPhonebookView.vue"
 // Models...
-import LoginModal from "@/Views/Modals/LoginModal.vue"
+import LoginModal from "@/views/Modals/LoginModal.vue"
 
 const routes: Array<RouteRecordRaw> = [
   // Pages:
