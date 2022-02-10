@@ -14,9 +14,6 @@ import apiControl from "@/Views/_components/apiControl.vue"
   }
 })
 export default class PublicRecordsView extends Vue{
-  test(){
-   PublicRecordsModule._api.getManifestSummary(); 
-  }
 }
 </script>
 

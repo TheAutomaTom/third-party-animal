@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { PublicRecordsModule } from "@/Infra/store/Modules/PublicRecordsData"
+import { PublicRecordsModule } from "@/Infra/store/Modules/PublicRecordsData";
 import apiControl from "@/Views/_components/apiControl.vue"
 import selectUsState from "@/Views/_components/selectUsState.vue";
 import { CountiesDictionaryDto } from '@/Infra/repository/Dtos/PublicRecordsDtos';
@@ -47,6 +47,7 @@ export default class apiGetCounties extends Vue{
 		if(this.inputUsState != null){
 		this.output = await PublicRecordsModule._api
 				.getCountyNamesDictionary(this.inputUsState);
+				console.dir(this.output);
 		}
   }
 

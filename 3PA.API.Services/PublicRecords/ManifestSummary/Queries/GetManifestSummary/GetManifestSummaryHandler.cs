@@ -14,7 +14,7 @@ namespace _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary
 
     public Task<GetManifestSummaryResponse> Handle(GetManifestSummaryQuery request, CancellationToken cancellationToken)
     {
-      var summary = new List<ManifestSummaryDto>();
+      var summary = new List<ManifestSummaryByUsStateDto>();
       //Enumerate states enum
       foreach (UsState usState in (UsState[])Enum.GetValues(typeof(UsState)))
       {
@@ -23,14 +23,14 @@ namespace _3PA.API.Services.Users.ManifestSummary.Queries.GetManifestSummary
           case UsState.Fl:            
             using (repo = new FlRepository())
             {
-              summary.Add( new ManifestSummaryDto(UsState.Fl, repo.GetManifestSummary() ));
+              summary.Add( new ManifestSummaryByUsStateDto(UsState.Fl, repo.GetManifestSummary() ));
             }
           break;
 
           case UsState.Nc:
             using (repo = new NcRepository())
             {
-              summary.Add(new ManifestSummaryDto(UsState.Nc, repo.GetManifestSummary()));
+              summary.Add(new ManifestSummaryByUsStateDto(UsState.Nc, repo.GetManifestSummary()));
             }
             break;
 

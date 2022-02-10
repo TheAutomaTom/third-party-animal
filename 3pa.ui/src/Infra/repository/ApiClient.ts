@@ -41,10 +41,10 @@ export class ApiClient{
     }
   }
 
-  async getManifestSummary(){    
+  async getManifestSummaries(){    
     const res = await this.get(`${ this._baseUrl }/PublicRecord/Manifest`);
     if (res.ok) {
-      return await res.json() as pub.ManifestSummaryDto;
+      return await res.json() as pub.ManifestSummariesDto;
     } else {
       throw Error(res.statusText);
     }
@@ -67,7 +67,7 @@ export class ApiClient{
     });
 
     if (res.ok) {
-      return await res.json() as pub.ManifestDto;
+      return await res.json() as pub.ManifestSummariesDto;
     } else {
       throw Error(res.statusText);
     }

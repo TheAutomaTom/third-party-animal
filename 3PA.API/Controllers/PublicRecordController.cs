@@ -69,6 +69,7 @@ namespace _3PA.API.Controllers
     }
 
     ///<summary>Read public record file and write contents to local Sql</summary>
+    ///<remarks>Your console will display progress while processing files</remarks>
     ///<param name="usState">Two letter U.S. state identifier.</param>
     ///<param name="category">Type of file: Voter Identities or Histories.</param>
     ///<param name="file">Publicly available elections againcy voter data file.</param>

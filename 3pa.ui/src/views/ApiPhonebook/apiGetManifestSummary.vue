@@ -8,13 +8,16 @@
 		</template>
 
 		<template v-slot:response>
-			<table>
-				<tr>{{output.usState}}</tr>
-				<tr v-for="(county, index) in output.counties" :key="index">
-					<td>{{index}}</td>
-					<td>{{county}}</td>
-				</tr>
-			</table>			 
+
+			<div v-for="summary in response.manifestSummaries" :key="summary.usState">
+				
+						<span>State: {{summary.usState}}</span>
+						<div v-for="manifest in summary.manifests" :key="manifest.fileName">
+							<p>File Name: {{manifest.fileName}} (Recorded: {{manifest.dateProcessed}})</p>
+							<p>Records: {{manifest.validated}} ({{manifest.orphaned}} orphans)</p>
+						</div>
+				
+			</div>
 		</template>
 
 	</api-control>
@@ -25,7 +28,7 @@ import { Options, Vue } from 'vue-class-component';
 import { PublicRecordsModule } from "@/Infra/store/Modules/PublicRecordsData"
 import apiControl from "@/Views/_components/apiControl.vue"
 import selectUsState from "@/Views/_components/selectUsState.vue";
-import { ManifestSummaryDto } from '@/Infra/repository/Dtos/PublicRecordsDtos';
+import { ManifestSummariesDto } from '@/Infra/repository/Dtos/PublicRecordsDtos';
 @Options({
   components: {
     PublicRecordsModule,
@@ -34,13 +37,13 @@ import { ManifestSummaryDto } from '@/Infra/repository/Dtos/PublicRecordsDtos';
   }
 })
 export default class apiGetCounties extends Vue{
-	inputUsState: string = "";
-	output = {} as ManifestSummaryDto;
+	response = {} as ManifestSummariesDto;
 	
   async callApi(){
-		if(this.inputUsState != null){
-		this.output = await PublicRecordsModule._api.getManifestSummary();
-		}
+		this.response = await PublicRecordsModule._api.getManifestSummaries();
+		console.dir(this.response);
+		console.dir(this.response.manifestSummaries);
+		
   }
 
 }
