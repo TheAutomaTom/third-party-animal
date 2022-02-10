@@ -41,8 +41,8 @@
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import "@/Assets/Styles/App-Colors.css";
-import "@/Assets/Styles/App-Layout.css";
+import "@/assets/Styles/App-Colors.css";
+import "@/assets/Styles/App-Layout.css";
 
 @Options({})
 export default class About extends Vue{}
