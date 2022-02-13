@@ -2,19 +2,20 @@
 
 namespace _3PA.Core.Models.Fl
 {
-  [Table("OrphanHistories")]
-  public class FlHistoryOrphan : FlHistory
+  [Table("Orphans")]
+  public class FlHistoryOrphan : FlHistoryBase
   {
     public FlHistoryOrphan(){}
     public FlHistoryOrphan(string row) : base(row){ }
-    public FlHistoryOrphan(FlHistory history)
+
+    public FlHistoryOrphan(FlHistoryBase historyBase)
     {
-      base.CountyCode = history.CountyCode;
-      base.VoterId = history.VoterId;
-      base.ElectionDate = history.ElectionDate;
-      base.ElectionType = history.ElectionType;
-      base.HistoryCode = history.HistoryCode;
-      base.Id = $"{VoterId}{ElectionDate}{ElectionType}{HistoryCode}";
+      CountyCode = historyBase.CountyCode;
+      VoterId = historyBase.VoterId;
+      ElectionDate = historyBase.ElectionDate;
+      ElectionType = historyBase.ElectionType;
+      HistoryCode = historyBase.HistoryCode;
+      Id = $"{VoterId}{ElectionDate}{ElectionType}{HistoryCode}";
 
     }
   }

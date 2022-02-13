@@ -19,9 +19,48 @@ namespace _3PA.Data.Sql.Core
     public Stopwatch TotalTime { get; set; }
     public int Progress { get; set; }
     public Stopwatch UpdateTime { get; set; }
-    public int Validated { get; set; }
-    public int Orphaned { get; set; }
-    public int Skipped { get; set; }
+
+    public int Validated
+    {
+      get => _validated;
+      set
+      {
+        if (value > 0)
+        {
+          Progress += value;
+          _validated = value;
+        }
+      }
+    }
+    private int _validated { get; set; }
+
+    public int Orphaned
+    {
+      get => _orphaned;
+      set
+      {
+        if (value > 0)
+        {
+          Progress += value;
+          _orphaned = value;
+        }
+      }
+    }
+    private int _orphaned { get; set; }
+
+    public int Skipped
+    {
+      get => _skipped;
+      set
+      {
+        if (value > 0)
+        {
+          Progress += value;
+          _skipped = value;
+        }
+      }
+    }
+    private int _skipped { get; set; }
 
     public void EndTimers()
     {

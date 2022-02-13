@@ -9,25 +9,25 @@
       Console.ForegroundColor = ConsoleColor.Blue;
       Console.Write("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
       Console.ForegroundColor = ConsoleColor.Red;
-                                 Console.WriteLine("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄-~▄▄─ ▄█_ ▄▀~─");
+                                 Console.WriteLine("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄-~▄▄─ ▄█_ ▄▀~─");
 
       Console.ForegroundColor = ConsoleColor.Blue;
       Console.Write("█─▄─▄─█─█─█▄─██▄─▄▄▀█▄─▄▄▀█");
       Console.ForegroundColor = ConsoleColor.White;
-                              Console.WriteLine("██▄─▄▄─██▀▄─▄█▄─▄▄▀█─▄─▄─█─▄─▄─█▄─█─▄████▀▄─▄█▄─▀█▄─▄█▄─██▄─▀█▀─▄██▀▄─▄█▄─▄███▄─~");
+                              Console.WriteLine("██▄─▄▄─██▀▄─▄█▄─▄▄▀█─▄─▄─█▄─█─▄███▀▄─▄█▄─▀█▄─▄█▄─██▄─▀█▀─▄██▀▄─▄█▄─▄███▄─~");
 
       Console.ForegroundColor = ConsoleColor.Blue;
       Console.Write("███─███─▄─██─███─▄─▄██─██─█");
       Console.ForegroundColor = ConsoleColor.Red;
-                              Console.WriteLine("███─▄▄▄██─▀─███─▄─▄███─█████─████▄─▄█████─▀─███─█▄▀─███─███─█▄█─███─▀─███─██▀█▄▄▄─");
+                              Console.WriteLine("███─▄▄▄██─▀─███─▄─▄███─████▄─▄████─▀─███─█▄▀─███─███─█▄█─███─▀─███─██▀█▄▄▄─");
       Console.ForegroundColor = ConsoleColor.White;
-      Console.WriteLine("██▄▄▄██▄█▄█▄▄▄█▄▄█▄▄█▄▄▄▄█████▄████▄▄█▄▄█▄▄█▄▄██▄▄▄███▄▄▄███▄▄█████▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄─`");
+      Console.WriteLine("██▄▄▄██▄█▄█▄▄▄█▄▄█▄▄█▄▄▄▄█████▄████▄▄█▄▄█▄▄█▄▄██▄▄▄███▄▄████▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄─`");
       Console.BackgroundColor = ConsoleColor.Red;
       Console.ForegroundColor = ConsoleColor.Black;
-      var subtextLine = ("                                                                          ▄  ▄ █▀._▀ █▀  ▄.▄▀▄▀▄▀▄─~ ▄█▄██");
+      var subtextLine = ("                                                                         ▄  ▄ █▀._▀ █▀  ▄.▄▀▄▀▄▀▄─~ ▄█▄██");
       Console.WriteLine($"  {subtext}{subtextLine.Remove(0, subtext.Length  )}");
       Console.ResetColor();
-      Console.WriteLine("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ▀   ▀ ▀ ▀     ▀~─ ▀─._  .▀~-   ");
+      Console.WriteLine("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ▀   ▀ ▀ ▀     ▀~─ ▀─._  .▀~-   ");
     }
   }
 }
