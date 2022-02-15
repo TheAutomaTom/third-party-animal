@@ -41,6 +41,7 @@ namespace _3PA.Data.Sql.Fl
       var currentSaves = 0;
       var t = new Tally(publicRecords.Count());
       printHeaders(t.Goal);
+      printUpdate(currentSaves, t);
 
       foreach (var voter in publicRecords)
       {
@@ -52,17 +53,17 @@ namespace _3PA.Data.Sql.Fl
           _context.Voters.Add(voter as FlVoter);
           t.Validated++;
 
-          var updates = t.Validated + t.Orphaned;
-          if ((updates > 0) && (updates % 10000 == 0))
-          {
-            currentSaves = _context.SaveChanges();
-            printUpdate( currentSaves, t );
-            t.UpdateTime.Restart();
-          }
         }
         else
         {
           t.Skipped++;
+        }
+        var updates = t.Validated + t.Orphaned + t.Skipped;
+        if ((updates > 0) && (updates % 10000 == 0))
+        {
+          currentSaves = _context.SaveChanges();
+          printUpdate(currentSaves, t);
+          t.UpdateTime.Restart();
         }
       }
 
@@ -88,6 +89,7 @@ namespace _3PA.Data.Sql.Fl
       var currentSaves = 0;
       var t = new Tally(publicRecords.Count());
       printHeaders(t.Goal);
+      printUpdate(currentSaves, t);
 
       foreach (var history in publicRecords)
       {
@@ -133,7 +135,7 @@ namespace _3PA.Data.Sql.Fl
           throw ex;
         }
 
-        var updates = t.Validated + t.Orphaned;
+        var updates = t.Validated + t.Orphaned + t.Skipped;
         if ((updates > 0) && (updates % 10000 == 0))
         {
           currentSaves = _context.SaveChanges();

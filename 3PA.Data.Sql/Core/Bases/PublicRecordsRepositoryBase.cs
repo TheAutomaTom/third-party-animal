@@ -17,16 +17,29 @@ namespace _3PA.Data.Sql.Core.Bases
 
     internal void printUpdate(int currentUpdates, Tally tally)
     {
-      var timePer = tally.UpdateTime.ElapsedMilliseconds / 10_000;
+      var timePer = tally.UpdateTime.Elapsed.TotalSeconds / 10_000;
       var timeLeft = (timePer * (tally.Goal - tally.Progress));
       var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
 
       Console.WriteLine("{0,-20}{1,-20}{2,-20}",
-        $"{tally.Progress:N0}/{Math.Round((decimal)tally.TotalTime.ElapsedMilliseconds, 2)}",
-        $"{currentUpdates:N0}/{Math.Round((decimal)tally.UpdateTime.ElapsedMilliseconds, 2)}",
+        $"{tally.Progress:N0}/ {Math.Round(tally.TotalTime.Elapsed.TotalSeconds, 2)}",
+        $"{currentUpdates:N0}/ {Math.Round(tally.UpdateTime.Elapsed.TotalSeconds, 2)}",
         estTimeCompleted
       );
+      Console.WriteLine($"{tally.Progress:N0} of {tally.Goal}");
+    }
 
+    internal void printUpdate(int currentUpdates, int progress, int goal, double updateTime, double totalTime)
+    {
+      var timePer = updateTime / 10_000;
+      var timeLeft = (timePer * (goal - progress));
+      var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
+
+      Console.WriteLine("{0,-20}{1,-20}{2,-20}",
+        $"{progress:N0}/{Math.Round((decimal)totalTime, 2)}",
+        $"{currentUpdates:N0}/{Math.Round((decimal)updateTime, 2)}",
+        estTimeCompleted
+      );
     }
 
     // I need to move Manifest into the DbContext  Base to make this work...
