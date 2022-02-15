@@ -1,38 +1,34 @@
-﻿namespace _3PA.Data.Sql.Core.Bases
+﻿using _3PA.Core.AsciiArt;
+
+namespace _3PA.Data.Sql.Core.Bases
 {
 	public class PublicRecordsRepositoryBase
   {
     internal void printTitle(string subtext = "Our Voter Data API v220107")
     {
-
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.Write("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.WriteLine("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄-~▄▄─ ▄█_ ▄▀~─");
-
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.Write("█─▄─▄─█─█─█▄─██▄─▄▄▀█▄─▄▄▀█");
-      Console.ForegroundColor = ConsoleColor.White;
-      Console.WriteLine("██▄─▄▄─██▀▄─▄█▄─▄▄▀█─▄─▄─█─▄─▄─█▄─█─▄████▀▄─▄█▄─▀█▄─▄█▄─██▄─▀█▀─▄██▀▄─▄█▄─▄███▄─~");
-
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.Write("███─███─▄─██─███─▄─▄██─██─█");
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.WriteLine("███─▄▄▄██─▀─███─▄─▄███─█████─████▄─▄█████─▀─███─█▄▀─███─███─█▄█─███─▀─███─██▀█▄▄▄─");
-      Console.ForegroundColor = ConsoleColor.White;
-      Console.WriteLine("██▄▄▄██▄█▄█▄▄▄█▄▄█▄▄█▄▄▄▄█████▄████▄▄█▄▄█▄▄█▄▄██▄▄▄███▄▄▄███▄▄█████▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄─`");
-      Console.BackgroundColor = ConsoleColor.Red;
-      Console.ForegroundColor = ConsoleColor.Black;
-      var subtextLine = ("                                                                          ▄  ▄ █▀._▀ █▀  ▄.▄▀▄▀▄▀▄─~ ▄█▄██");
-      Console.WriteLine($"  {subtext}{subtextLine.Remove(0, subtext.Length)}");
-      Console.ResetColor();
-      Console.WriteLine("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ▀   ▀ ▀ ▀     ▀~─ ▀─._  .▀~-   ");
+      Console.Clear();
+      Title.Print();
     }
     internal void printHeaders(int goal)
     {
       Console.WriteLine($"Processing {goal.ToString("N0")} records...");
       Console.WriteLine("{0,-20}{1,-20}{2,-20}", "PROGRESS", "ADDITIONS", "PROJECTION");
     }
+
+    internal void printUpdate(int currentUpdates, Tally tally)
+    {
+      var timePer = tally.UpdateTime.Elapsed.TotalSeconds / 10_000;
+      var timeLeft = (timePer * (tally.Goal - tally.Progress));
+      var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
+
+      Console.WriteLine("{0,-20}{1,-20}{2,-20}",
+        $"{tally.Progress:N0}/ {Math.Round(tally.TotalTime.Elapsed.TotalSeconds, 2)}",
+        $"{currentUpdates:N0}/ {Math.Round(tally.UpdateTime.Elapsed.TotalSeconds, 2)}",
+        estTimeCompleted
+      );
+      Console.WriteLine($"{tally.Progress:N0} of {tally.Goal}");
+    }
+
     internal void printUpdate(int currentUpdates, int progress, int goal, double updateTime, double totalTime)
     {
       var timePer = updateTime / 10_000;
@@ -40,26 +36,26 @@
       var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
 
       Console.WriteLine("{0,-20}{1,-20}{2,-20}",
-          $"{progress.ToString("N0")      }/{Math.Round(totalTime,  2)}",
-          $"{currentUpdates.ToString("N0")}/{Math.Round(updateTime, 2)}",
-          estTimeCompleted
-        );
+        $"{progress:N0}/{Math.Round((decimal)totalTime, 2)}",
+        $"{currentUpdates:N0}/{Math.Round((decimal)updateTime, 2)}",
+        estTimeCompleted
+      );
     }
 
-		// I need to move Manifest into the DbContext  Base to make this work...
-  //  public List<Manifest> GetManifestSummary(DbContextBase _context)
-		//{
-  //    var summary = new List<Manifest>();
-  //    if (_context.Database.CanConnect() && _context.Manifest.Any())
-		//	{
-		//		foreach (var entry in _context.Manifest)
-		//		{
-  //        summary.Add(entry);
-		//		}        
-  //    }
-  //    return summary;      
-  //  }
-		private bool disposedValue;
+    // I need to move Manifest into the DbContext  Base to make this work...
+    //  public List<Manifest> GetManifestSummary(DbContextBase _context)
+    //{
+    //    var summary = new List<Manifest>();
+    //    if (_context.Database.CanConnect() && _context.Manifest.Any())
+    //	{
+    //		foreach (var entry in _context.Manifest)
+    //		{
+    //        summary.Add(entry);
+    //		}        
+    //    }
+    //    return summary;      
+    //  }
+    private bool disposedValue;
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposedValue)

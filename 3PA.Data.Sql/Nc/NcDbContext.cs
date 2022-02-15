@@ -8,19 +8,28 @@ namespace _3PA.Data.Sql.Nc
   {
     public DbSet<NcVoter> Voters { get; set; }
     public DbSet<NcHistoryActive> Histories { get; set; }
-    public DbSet<NcHistoryOrphan> OrphanHistories { get; set; }
-    public DbSet<Manifest> Manifest { get; set; }
-    public string catalog => "PublicRecord.Nc";
+    public DbSet<NcHistoryOrphan> Orphans { get; set; }
+    public DbSet<Manifest> Manifests { get; set; }
+    protected override string catalog => "PublicRecord.NcVoter";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       optionsBuilder.UseSqlServer(
-                        $"{base.basePath}{catalog}",
-                        o => o
-                        .MinBatchSize(1)
-                        //.MaxBatchSize(10000)
-                        );
+        $"{base.basePath}{catalog}",
+        o => o
+          .MinBatchSize(1)
+        //.MaxBatchSize(10000)
+      );
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<NcHistoryActive>()
+        .HasOne<_3PA.Core.Models.Nc.NcVoter>(a => a.Voter)
+        .WithMany(v => v.Histories);
+
+    }
+
 
   }
 }

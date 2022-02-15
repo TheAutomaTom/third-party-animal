@@ -14,14 +14,14 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
           // Filenames...
           RuleFor(r => Path.GetFileNameWithoutExtension(r.FileName))
           .Matches(@"^\D{3}_\d{8}$")
-          .WithMessage("Not a supported Fl Voter File");
+          .WithMessage("Not a supported FlVoter Voter File");
         });
         When(r => r.Category == Category.History, () =>
         {
           // Filenames...
           RuleFor(r => Path.GetFileNameWithoutExtension(r.FileName))
           .Matches(@"^\D{3}_H_\d{8}$")
-          .WithMessage("Not a supported Fl History File"); 
+          .WithMessage("Not a supported FlVoter History File"); 
         });
       });
 
@@ -32,14 +32,14 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
           // Filenames...
           RuleFor(r => Path.GetFileNameWithoutExtension(r.FileName))
           .Matches(@"^ncvoter\d{1,3}$")
-          .WithMessage("Not a supported Nc Voter File");
+          .WithMessage("Not a supported NcVoter Voter File");
         });
         When(r => r.Category == Category.History, () =>
         {
           // Filenames...
           RuleFor(r => Path.GetFileNameWithoutExtension(r.FileName))
           .Matches(@"^ncvhis\d{1,3}$")
-          .WithMessage("Not a supported Nc History File");
+          .WithMessage("Not a supported NcVoter History File");
         });
       });
 

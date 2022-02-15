@@ -4,9 +4,13 @@ namespace _3PA.Data.Sql.Core.Interfaces
 {
   public interface IPublicRecordsRepository : IDisposable
   {
-    public List<Manifest> GetManifestSummary();
-    public IEnumerable<PublicRecordBase> ReadVoters(string[] list);
-    public IEnumerable<PublicRecordBase> ReadHistories(string[] list);
-    public Task<Manifest> CommitRecords<T>(string FileName, IEnumerable<PublicRecordBase> publicRecords) where T : class;
+    public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] list);
+    public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] list);
+    
+    public Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords);
+    public Task<Manifest> CommitHistoryRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords);
+
+    public IList<Manifest> GetManifestSummary();
+
   }
 }
