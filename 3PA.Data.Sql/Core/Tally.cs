@@ -11,6 +11,9 @@ namespace _3PA.Data.Sql.Core
       UpdateTime = new Stopwatch();
       if (start)
       {
+        Progress = 0;
+        Validated = 0;
+        Skipped = 0;
         TotalTime.Start();
         UpdateTime.Start();
       }
@@ -19,7 +22,6 @@ namespace _3PA.Data.Sql.Core
     public Stopwatch TotalTime { get; set; }
     public int Progress { get; set; }
     public Stopwatch UpdateTime { get; set; }
-
     public int Validated
     {
       get => _validated;
@@ -27,13 +29,12 @@ namespace _3PA.Data.Sql.Core
       {
         if (value > 0)
         {
-          Progress += value;
+          Progress += value - _validated;
           _validated = value;
         }
       }
     }
     private int _validated { get; set; }
-
     public int Orphaned
     {
       get => _orphaned;
@@ -41,13 +42,12 @@ namespace _3PA.Data.Sql.Core
       {
         if (value > 0)
         {
-          Progress += value;
+          Progress += value - _orphaned;
           _orphaned = value;
         }
       }
     }
     private int _orphaned { get; set; }
-
     public int Skipped
     {
       get => _skipped;
@@ -55,14 +55,14 @@ namespace _3PA.Data.Sql.Core
       {
         if (value > 0)
         {
-          Progress += value;
+          Progress += value - _skipped;
           _skipped = value;
         }
       }
     }
     private int _skipped { get; set; }
 
-    public void EndTimers()
+    public void EndTimes()
     {
       TotalTime.Stop();
       UpdateTime.Stop();
