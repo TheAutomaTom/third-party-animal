@@ -1,35 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _3PA.Core.Models.Nc
 {
-  [Table("OrphanHistories")]
-  public class NcHistoryOrphan : NcHistory
+  [Table("Orphans")]
+  public class NcHistoryOrphan : NcHistoryBase
   {
     public NcHistoryOrphan() { }
     public NcHistoryOrphan(string row) : base(row) { }
-    public NcHistoryOrphan(NcHistory history)
+
+    public NcHistoryOrphan(NcHistoryBase historyBase)
     {
-      base.CountyId = history.CountyId;
-      base.CountyDescription = history.CountyDescription;
-      base.VoterRegistrationNumber = history.VoterRegistrationNumber;
-      base.ElectionLable = history.ElectionLable;
-      base.ElectionDescription = history.ElectionDescription;
-      base.VotingMethod = history.VotingMethod;
-      base.VotedPartyCd = history.VotedPartyCd;
-      base.VotedPartyDescription = history.VotedPartyDescription;
-      base.PctLabel = history.PctLabel;
-      base.PctDescription = history.PctDescription;
-      base.Ncid = history.Ncid;
-      base.VotedCountyId = history.VotedCountyId;
-      base.VotedCounty_Description = history.VotedCounty_Description;
-      base.VotedLabel = history.VotedLabel;
-      base.VotedDescription = history.VotedDescription;
-      base.Id = $"{VoterRegistrationNumber}{PctLabel}{ElectionLable}{VotingMethod}";
+      CountyId = historyBase.CountyId;
+      CountyDescription = historyBase.CountyDescription;
+      VoterRegistrationNumber = historyBase.VoterRegistrationNumber;
+      ElectionLable = historyBase.ElectionLable;
+      ElectionDescription = historyBase.ElectionDescription;
+      VotingMethod = historyBase.VotingMethod;
+      VotedPartyCd = historyBase.VotedPartyCd;
+      VotedPartyDescription = historyBase.VotedPartyDescription;
+      PctLabel = historyBase.PctLabel;
+      PctDescription = historyBase.PctDescription;
+      Ncid = historyBase.Ncid;
+      VotedCountyId = historyBase.VotedCountyId;
+      VotedCounty_Description = historyBase.VotedCounty_Description;
+      VotedLabel = historyBase.VotedLabel;
+      VotedDescription = historyBase.VotedDescription;
+      Id = $"{VoterRegistrationNumber}{PctLabel}{ElectionLable}{VotingMethod}";
 
     }
   }

@@ -10,22 +10,20 @@ namespace _3PA.Data.Sql.Nc
   public class NcRepository : PublicRecordsRepositoryBase, IPublicRecordsRepository
   {
     NcDbContext _context { get; set; }
-    IGeoData _geoData { get; set; }
     public NcRepository()
     {
       _context = new NcDbContext();
       _context.Database.EnsureCreated();
-      _geoData = new NcGeoData();
     }
 
-    public List<Manifest> GetManifestSummary()
+    public IList<Manifest> GetManifestSummary()
     {
       // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
       //return base.GetManifestSummary(_context);          
       var summary = new List<Manifest>();
-      if (_context.Database.CanConnect() && _context.Manifest.Any())
+      if (_context.Database.CanConnect() && _context.Manifests.Any())
       {
-        foreach (var entry in _context.Manifest)
+        foreach (var entry in _context.Manifests)
         {
           summary.Add(entry);
         }
@@ -33,119 +31,138 @@ namespace _3PA.Data.Sql.Nc
       return summary;
     }
 
-    public IEnumerable<PublicRecordBase> ReadVoters(string[] raw)
+    public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] raw)
     {
       var list = sanitizeInput(raw, 1 /*71*/ );
-      var toReturn = list.Select(v => new NcVoter(v)).ToList();
-      return toReturn;
-
+      return list.Select(v => new NcVoter(v)).ToList();
     }
       
-    public IEnumerable<PublicRecordBase> ReadHistories(string[] list) =>
-      sanitizeInput(list, 15).Select(v => new NcHistory(v)).ToList();
+    public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] list) =>
+      sanitizeInput(list, 15).Select(v => new NcHistoryBase(v)).ToList();
+
     string[] sanitizeInput(string[] listWithHeaders, int headerCount)
     {
       var withoutHeaders = listWithHeaders.Skip(headerCount).ToArray();
       var withoutQuotes = withoutHeaders.Select(s => s.Replace("\"","")).ToArray();
       return withoutQuotes;
-    }      
+    }
 
-    public async Task<Manifest> CommitRecords<T>(string fileName, IEnumerable<PublicRecordBase> publicRecords) where T : class
+    public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords) 
     {
-      Console.Clear();
-      base.printTitle();
-      var updates = 0;
-      var saves = 0;
-      var t = new Tally(publicRecords.Count());
-      base.printHeaders(t.Goal);
+      if (fileName == "" || !publicRecords.Any()) return new Manifest(fileName, 0, 0);
 
-      foreach (var x in publicRecords)
+      printTitle();
+      var currentSaves = 0;
+      var t = new Tally(publicRecords.Count());
+      printHeaders(t.Goal);
+
+      foreach (var voter in publicRecords)
       {
-        if (typeof(T).Name == nameof(NcVoter))
+        var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter).Id);
+        if (existingId == null)
         {
-          var existingId = _context.Voters.FirstOrDefault(exists => exists.VoterRegNum == (x as NcVoter).VoterRegNum);
-          if (existingId == null)
+          var x = _context.Voters.EntityType;
+
+          _context.Voters.Add(voter as NcVoter);
+          t.Validated++;
+
+          var updates = t.Validated + t.Orphaned;
+          if ((updates > 0) && (updates % 10000 == 0))
           {
-            await _context.Voters.AddAsync(x as NcVoter);
+            currentSaves = _context.SaveChanges();
+            printUpdate(currentSaves, t);
+            t.UpdateTime.Restart();
+          }
+        }
+        else
+        {
+          t.Skipped++;
+        }
+      }
+
+      updateManifest(fileName);
+      currentSaves = _context.SaveChanges();
+      printUpdate(currentSaves, t);
+      Console.WriteLine("FINALIZING UPDATES...");
+      var actualUpdates = t.Validated + t.Orphaned;
+      var results = new Manifest(fileName, actualUpdates, t.Goal - actualUpdates);
+      await _context.Manifests.AddAsync(results);
+
+      currentSaves = _context.SaveChanges();
+      Console.WriteLine($"{fileName} has been processed!\n");
+
+      return results;
+    }
+
+    public async Task<Manifest> CommitHistoryRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords)
+    {
+      if (fileName == "" || !publicRecords.Any()) return new Manifest(fileName, 0, 0);
+
+      printTitle();
+      var currentSaves = 0;
+      var t = new Tally(publicRecords.Count());
+      printHeaders(t.Goal);
+
+      foreach (var history in publicRecords)
+      {
+        //Check if this historyBase is new...
+        var existingHistory = _context.Histories
+          .FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id) != null;
+        if (!existingHistory)
+        {
+          //Check if this historyBase is not an orphan...
+          var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
+          if (existingVoter != null)
+          {
+            var h = new NcHistoryActive(existingVoter, history as NcHistoryBase);
+            await _context.Histories.AddAsync(h);
             t.Validated++;
           }
           else
           {
-            t.Skipped++;
-          }        
-
-        }
-        else //History...
-        {
-          //Check if this history is new...
-          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (x as NcHistory).Id) != null;
-          if (!existingHistory)
-          {
-            //Check if this history is an orphan...
-            var existingVoter = _context.Voters.FirstOrDefault(exists => exists.VoterRegNum == (x as NcHistory).VoterRegistrationNumber);
-            if(existingVoter != null)
+            //Check if the orphan is already recorded...
+            var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
+            if (existingOrphan == null)
             {
-              var h = new NcHistoryActive(existingVoter, (x as NcHistory));
-              await _context.Histories.AddAsync(h);
-              t.Validated++;
+              var h = new NcHistoryOrphan(history as NcHistoryBase);
+              await _context.Orphans.AddAsync(h);
+              t.Orphaned++;
             }
             else
             {
-              //Check if the orphan is already recorded...
-              var existingOrphan = _context.OrphanHistories.FirstOrDefault(exists => exists.Id == (x as NcHistory).Id);
-              if (existingOrphan == null)
-              {
-                var h = new NcHistoryOrphan(x as NcHistory);
-                await _context.OrphanHistories.AddAsync(h);
-                t.Orphaned++;
-              }
-              else
-              {
-                t.Skipped++;
-              }
+              t.Skipped++;
             }
           }
         }
-        t.Progress++;
 
-        updates = t.Validated + t.Orphaned;
+        var updates = t.Validated + t.Orphaned;
         if ((updates > 0) && (updates % 10000 == 0))
         {
-          saves = _context.SaveChanges();
-          base.printUpdate(
-                saves,
-                t.Progress,
-                t.Goal,
-                t.UpdateTime.Elapsed.TotalSeconds,
-                t.TotalTime.Elapsed.TotalSeconds
-              );
+          currentSaves = _context.SaveChanges();
+          printUpdate(currentSaves, t);
           t.UpdateTime.Restart();
         }
 
       }
 
       updateManifest(fileName);
-      saves = _context.SaveChanges();
-      base.printUpdate(
-            saves,
-            t.Progress,
-            t.Goal,
-            t.UpdateTime.Elapsed.TotalSeconds,
-            t.TotalTime.Elapsed.TotalSeconds
-          );
+      currentSaves = _context.SaveChanges();
+      printUpdate(currentSaves, t);
 
       Console.WriteLine("FINALIZING UPDATES...");
-      updates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, updates, t.Goal - updates);
-      await _context.Manifest.AddAsync(results);
-      saves = _context.SaveChanges();
-      return results;
+      var actualUpdates = t.Validated + t.Orphaned;
+      var results = new Manifest(fileName, actualUpdates, t.Goal - actualUpdates);
+      await _context.Manifests.AddAsync(results);
 
+      currentSaves = _context.SaveChanges();
+      Console.WriteLine($"{fileName} has been processed!\n");
+
+      return results;
     }
 
     void updateManifest(string fileName)
     {
-      var manifestExists = _context.Manifest.FirstOrDefault(exists => exists.FileName == fileName);
+      var manifestExists = _context.Manifests.FirstOrDefault(exists => exists.FileName == fileName);
       if (manifestExists != null)
       {
         _context.Entry(manifestExists).State = EntityState.Deleted;
@@ -155,3 +172,5 @@ namespace _3PA.Data.Sql.Nc
 
   }
 }
+
+

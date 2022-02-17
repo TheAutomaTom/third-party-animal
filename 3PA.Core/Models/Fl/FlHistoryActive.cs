@@ -3,23 +3,22 @@
 namespace _3PA.Core.Models.Fl
 {
   [Table("Histories")]
-  public class FlHistoryActive: FlHistory
+  public class FlHistoryActive: FlHistoryBase
   {
+    public FlHistoryActive(){}
+    public FlHistoryActive(string row) : base(row){ }
+
     //EF Core reference navigation property
     public FlVoter Voter { get; set; }
-
-    public FlHistoryActive(){}
-    public FlHistoryActive(string row) : base(row){}
-
-    public FlHistoryActive(FlVoter voter, FlHistory history)
+    public FlHistoryActive(FlVoter voter, FlHistoryBase historyBase)
     {
       Voter = voter;
-      base.CountyCode = history.CountyCode;
-      base.VoterId = history.VoterId;
-      base.ElectionDate = history.ElectionDate;
-      base.ElectionType = history.ElectionType;
-      base.HistoryCode = history.HistoryCode;
-      base.Id = $"{VoterId}{ElectionDate}{ElectionType}{HistoryCode}";    
+      CountyCode = historyBase.CountyCode;
+      VoterId = historyBase.VoterId;
+      ElectionDate = historyBase.ElectionDate;
+      ElectionType = historyBase.ElectionType;
+      HistoryCode = historyBase.HistoryCode;
+      Id = $"{VoterId}{ElectionDate}{ElectionType}{HistoryCode}";    
 
     }
   }

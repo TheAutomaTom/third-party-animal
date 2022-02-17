@@ -31,14 +31,14 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
           repo = new FlRepository();
           if (request.Category == Category.Voter)
           {
-            var list = repo.ReadVoters(rawText);
-            var updated = await repo.CommitRecords<FlVoter>(request.FileName, list);
+            var list = repo.ReadVoterRecords(rawText);
+            var updated = await repo.CommitVoterRecords(request.FileName, list);
             return new ReadFileToSqlResponse(updated);
           } 
           else
           {
-            var list = repo.ReadHistories(rawText);
-            var updated = await repo.CommitRecords<FlHistoryActive>(request.FileName, list);
+            var list = repo.ReadHistoryRecords(rawText);
+            var updated = await repo.CommitHistoryRecords(request.FileName, list);
             return new ReadFileToSqlResponse(updated);
           }
 
@@ -46,14 +46,14 @@ namespace _3PA.API.Services.PublicRecords.Consumer.Commands
           repo = new NcRepository();
           if (request.Category == Category.Voter)
           {
-            var list = repo.ReadVoters(rawText);
-            var updated = await repo.CommitRecords<NcVoter>(request.FileName, list);
+            var list = repo.ReadVoterRecords(rawText);
+            var updated = await repo.CommitVoterRecords(request.FileName, list);
             return new ReadFileToSqlResponse(updated);
           }
           else
           {
-            var list = repo.ReadHistories(rawText);
-            var updated = await repo.CommitRecords<NcHistory>(request.FileName, list);
+            var list = repo.ReadHistoryRecords(rawText);
+            var updated = await repo.CommitHistoryRecords(request.FileName, list);
             return new ReadFileToSqlResponse(updated);
           }
 

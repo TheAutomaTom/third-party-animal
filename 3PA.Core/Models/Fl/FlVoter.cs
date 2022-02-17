@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _3PA.Core.Models.Fl
 {
   [Table("Voters")]
-  public class FlVoter : PublicRecordBase
+  public class FlVoter : PublicRecordVoterBase
   {
-    [Key]
-    public string VoterId { get; set; }
-    public string CountyCode { get; set; }
+    public string? CountyCode { get; set; }
     public string? NameLast { get; set; }
     public string? NameSuffix { get; set; }
     public string? NameFirst { get; set; }
@@ -55,7 +52,10 @@ namespace _3PA.Core.Models.Fl
     {
       string[] values = row.Split('\t');
       CountyCode = (string?)values[0];
-      VoterId = (string)values[1];
+
+      //VoterId = (string)values[1];
+      Id = (string)values[1];
+
       NameLast = (string?)values[2];
       NameSuffix = (string?)values[3];
       NameFirst = (string?)values[4];

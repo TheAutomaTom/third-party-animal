@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _3PA.Core.Models.Nc
 {
   [Table("Voters")]
-  public class NcVoter : PublicRecordBase
+  public class NcVoter : PublicRecordVoterBase
   {
     public string? CountyId { get; set; }
     public string? CountyDesc { get; set; }
-    [Key]
-    public string? VoterRegNum { get; set; }
+    //public string? VoterRegNum { get; set; }
     public string? StatusCd { get; set; }
     public string? VoterStatusDesc { get; set; }
     public string? ReasonCd { get; set; }
@@ -78,13 +76,20 @@ namespace _3PA.Core.Models.Nc
     public string? Ncid { get; set; }
     public string? VtdAbbrv { get; set; }
     public string? VtdDesc { get; set; }
-    public NcVoter(){}
+    #region Concerning EF...
+    public NcVoter() { }
+    //EF Core collection navigation property
+    public ICollection<NcHistoryActive> Histories { get; set; }
+    #endregion ...EF
     public NcVoter(string row)
     {
       string[] values = row.Split('\t');
       CountyId = (string?)values[0];
       CountyDesc = (string?)values[1];
-      VoterRegNum = (string?)values[2];      
+
+      //VoterRegNum = (string?)values[2];      
+      Id = (string)values[2];
+
       StatusCd = (string?)values[3];
       VoterStatusDesc = (string?)values[4];
       ReasonCd = (string?)values[5];

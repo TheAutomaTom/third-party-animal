@@ -8,19 +8,21 @@ namespace _3PA.Data.Sql.Fl
   {
     public DbSet<FlVoter> Voters { get; set; }
     public DbSet<FlHistoryActive> Histories { get; set; }
-    public DbSet<FlHistoryOrphan> OrphanHistories { get; set; }
-    public DbSet<Manifest> Manifest { get; set; }
-    public string catalog => "PublicRecord.Fl";
+    public DbSet<FlHistoryOrphan> Orphans { get; set; }
+    public DbSet<Manifest> Manifests { get; set; }
+    protected override string catalog => "PublicRecord.FlVoter";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       optionsBuilder.UseSqlServer(
                         $"{base.basePath}{catalog}"
                         );
+      optionsBuilder.EnableSensitiveDataLogging();
+
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       modelBuilder.Entity<FlHistoryActive>()
-      .HasOne<FlVoter>(a => a.Voter)
+      .HasOne<_3PA.Core.Models.Fl.FlVoter>(a => a.Voter)
       .WithMany(v => v.Histories);
     }
   }
