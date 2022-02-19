@@ -16,20 +16,7 @@ namespace _3PA.Data.Sql.Nc
       _context.Database.EnsureCreated();
     }
 
-    public IList<Manifest> GetManifestSummary()
-    {
-      // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
-      //return base.GetManifestSummary(_context);          
-      var summary = new List<Manifest>();
-      if (_context.Database.CanConnect() && _context.Manifests.Any())
-      {
-        foreach (var entry in _context.Manifests)
-        {
-          summary.Add(entry);
-        }
-      }
-      return summary;
-    }
+    public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
 
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] raw)
     {

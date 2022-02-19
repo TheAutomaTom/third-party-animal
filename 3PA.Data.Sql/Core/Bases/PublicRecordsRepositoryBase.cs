@@ -22,11 +22,10 @@ namespace _3PA.Data.Sql.Core.Bases
       var estTimeCompleted = (DateTime.Now.AddSeconds(timeLeft)).ToString("t");
 
       Console.WriteLine("{0,-20}{1,-20}{2,-20}",
-        $"{tally.Progress:N0}/ {Math.Round(tally.TotalTime.Elapsed.TotalSeconds, 2)}",
-        $"{currentUpdates:N0}/ {Math.Round(tally.UpdateTime.Elapsed.TotalSeconds, 2)}",
+        $"{tally.Progress:N0}/ {Math.Round(tally.TotalTime.Elapsed.TotalSeconds, 2)}\"",
+        $"{currentUpdates:N0}/ {Math.Round(tally.UpdateTime.Elapsed.TotalSeconds, 2)}\"",
         estTimeCompleted
       );
-      Console.WriteLine($"{tally.Progress:N0} of {tally.Goal}");
     }
 
     internal void printUpdate(int currentUpdates, int progress, int goal, double updateTime, double totalTime)
@@ -42,20 +41,20 @@ namespace _3PA.Data.Sql.Core.Bases
       );
     }
 
-    // I need to move Manifest into the DbContext  Base to make this work...
-    //  public List<Manifest> GetManifestSummary(DbContextBase _context)
-    //{
-    //    var summary = new List<Manifest>();
-    //    if (_context.Database.CanConnect() && _context.Manifest.Any())
-    //	{
-    //		foreach (var entry in _context.Manifest)
-    //		{
-    //        summary.Add(entry);
-    //		}        
-    //    }
-    //    return summary;      
-    //  }
-    private bool disposedValue;
+		// I need to move Manifest into the DbContext  Base to make this work...
+		internal List<Manifest> getManifestSummary(DbContextBase _context)
+		{
+			var summary = new List<Manifest>();
+			if (_context.Database.CanConnect() && _context.Manifests.Any())
+			{
+				foreach (var entry in _context.Manifests)
+				{
+					summary.Add(entry);
+				}
+			}
+			return summary;
+		}
+		private bool disposedValue;
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposedValue)

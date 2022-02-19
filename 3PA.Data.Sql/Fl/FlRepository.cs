@@ -18,20 +18,7 @@ namespace _3PA.Data.Sql.Fl
 
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] list) => list.Select(v => new FlVoter(v)).ToList();
     public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] list) => list.Select(v => new FlHistoryBase(v)).ToList();
-    public IList<Manifest> GetManifestSummary()
-		{
-      // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
-      //return base.GetManifestSummary(_context);          
-      var summary = new List<Manifest>();
-      if (_context.Database.CanConnect() && _context.Manifests.Any())
-      {
-        foreach (var entry in _context.Manifests)
-        {
-          summary.Add(entry);      		
-        }
-      }      
-      return summary; 
-    }
+    public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
 
     public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords)
     {
@@ -98,7 +85,6 @@ namespace _3PA.Data.Sql.Fl
         {
           var existingHistory =
             _context.Histories.FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).Id) != null;
-
 
           if (!existingHistory)
           {

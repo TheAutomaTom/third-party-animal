@@ -9,7 +9,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Vue, Options } from 'vue-class-component';
 import { PublicRecordsModule } from "@/infra/store/Modules/PublicRecordsData";
 import apiGetCounties from "./apiGetCounties.vue";
 import apiGetCountyNameFromId from "./apiGetCountyNameFromId.vue";

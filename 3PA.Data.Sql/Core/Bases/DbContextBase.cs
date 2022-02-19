@@ -12,8 +12,8 @@ namespace _3PA.Data.Sql.Core
     public virtual DbSet<PublicRecordVoterBase> Voters { get; set; }
     public DbSet<PublicRecordHistoryBase> Histories { get; set; }
     public DbSet<PublicRecordHistoryBase> Orphans { get; set; }
-    public DbSet<Manifest> Manifests { get; set; }
     */
+    public DbSet<Manifest> Manifests { get; set; }
 
     protected virtual string catalog { get; }
 
