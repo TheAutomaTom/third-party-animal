@@ -111,6 +111,15 @@
         {"99", "YADKIN"},
         {"100", "YANCEY"}
       };
-    }
-  }
 
+    public override IDictionary<string, string> RegisterableParties
+      => new Dictionary<string, string>
+      {
+        {"UNA","UNAFFILIATED" },
+        {"DEM","DEMOCRAT" },
+        {"REP","REPUBLICAN" },
+        {"LIB","LIBERTARIAN" },
+
+      };
+  }
+}

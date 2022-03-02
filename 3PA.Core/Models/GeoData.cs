@@ -8,6 +8,7 @@ namespace _3PA.Core.Models
     public virtual int CountyIdMaxLength { get; }
     public virtual bool KeyIsInt { get; }
     public virtual IDictionary<string, string>? CountyIds { get; }
+    public virtual IDictionary<string, string>? RegisterableParties { get; }
 
   }
 
