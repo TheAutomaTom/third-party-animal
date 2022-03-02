@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models.Nc
 {
-  public class NcGeoData : IGeoData
+  public class NcGeoData : GeoData
   {
     public override char Delimiter => '\t';    
     public override string FileSuffix => ".txt";

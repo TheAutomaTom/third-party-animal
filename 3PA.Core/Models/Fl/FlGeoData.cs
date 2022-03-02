@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models.Fl
 {
-  public class FlGeoData : IGeoData
+  public class FlGeoData : GeoData
   {
     public override char Delimiter => '\t';
     public override string FileSuffix => ".txt";

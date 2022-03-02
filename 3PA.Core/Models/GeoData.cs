@@ -1,6 +1,6 @@
 namespace _3PA.Core.Models
 {
-  public abstract class IGeoData
+  public abstract class GeoData
   {
     public virtual char Delimiter { get; }
     public virtual string FileSuffix { get; }
