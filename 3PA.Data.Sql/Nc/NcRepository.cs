@@ -53,8 +53,8 @@ namespace _3PA.Data.Sql.Nc
           _context.Voters.Add(voter as NcVoter);
           t.Validated++;
 
-          var updates = t.Validated + t.Orphaned;
-          if ((updates > 0) && (updates % 10000 == 0))
+          var updates = t.Validated + t.Skipped;
+          if ((t.Validated > 0) && (t.Validated % 10000 == 0))
           {
             currentSaves = _context.SaveChanges();
             printUpdate(currentSaves, t);
@@ -67,16 +67,16 @@ namespace _3PA.Data.Sql.Nc
         }
       }
 
-      updateManifest(fileName);
       currentSaves = _context.SaveChanges();
       printUpdate(currentSaves, t);
-      Console.WriteLine("FINALIZING UPDATES...");
-      var actualUpdates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, actualUpdates, t.Goal - actualUpdates);
+
+      Console.Write("FINALIZING UPDATES...");
+      var results = new Manifest(fileName, t.Validated, t.Orphaned);
+      clearManifest(fileName);
       await _context.Manifests.AddAsync(results);
 
       currentSaves = _context.SaveChanges();
-      Console.WriteLine($"{fileName} has been processed!\n");
+      Console.WriteLine($"{fileName}'s {t.Goal:N0} voters have been processed!\n");
 
       return results;
     }
@@ -92,37 +92,34 @@ namespace _3PA.Data.Sql.Nc
 
       foreach (var history in publicRecords)
       {
-        //Check if this historyBase is new...
-        var existingHistory = _context.Histories
-          .FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id) != null;
-        if (!existingHistory)
-        {
-          //Check if this historyBase is not an orphan...
-          var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
-          if (existingVoter != null)
-          {
+        //Check if this history's voter is recorded...
+        var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).VoterRegistrationNumber);
+        if(existingVoter != null)
+				{
+          //...then check if this is already recorded...
+          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id) != null;
+          if(!existingHistory)
+					{
             var h = new NcHistoryActive(existingVoter, history as NcHistoryBase);
             await _context.Histories.AddAsync(h);
-            t.Validated++;
+            t.Validated++;            
+          }        
+        } else {
+          // ...this is an orphan history, so check if it already has been recorded...
+          var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
+          if (existingOrphan == null)
+          {
+            var h = new NcHistoryOrphan(history as NcHistoryBase);
+            await _context.Orphans.AddAsync(h);
+            t.Orphaned++;
           }
           else
           {
-            //Check if the orphan is already recorded...
-            var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
-            if (existingOrphan == null)
-            {
-              var h = new NcHistoryOrphan(history as NcHistoryBase);
-              await _context.Orphans.AddAsync(h);
-              t.Orphaned++;
-            }
-            else
-            {
-              t.Skipped++;
-            }
+            t.Skipped++;
           }
         }
 
-        var updates = t.Validated + t.Orphaned;
+        var updates = t.Validated + t.Orphaned + t.Skipped;
         if ((updates > 0) && (updates % 10000 == 0))
         {
           currentSaves = _context.SaveChanges();
@@ -132,22 +129,21 @@ namespace _3PA.Data.Sql.Nc
 
       }
 
-      updateManifest(fileName);
       currentSaves = _context.SaveChanges();
       printUpdate(currentSaves, t);
 
-      Console.WriteLine("FINALIZING UPDATES...");
-      var actualUpdates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, actualUpdates, t.Goal - actualUpdates);
+      Console.Write("FINALIZING UPDATES...");
+      var results = new Manifest(fileName, t.Validated, t.Orphaned);
+      clearManifest(fileName);
       await _context.Manifests.AddAsync(results);
 
       currentSaves = _context.SaveChanges();
-      Console.WriteLine($"{fileName} has been processed!\n");
+      Console.WriteLine($"{fileName}'s {t.Goal:N0} histories have been processed!\n");
 
       return results;
     }
 
-    void updateManifest(string fileName)
+    void clearManifest(string fileName)
     {
       var manifestExists = _context.Manifests.FirstOrDefault(exists => exists.FileName == fileName);
       if (manifestExists != null)
