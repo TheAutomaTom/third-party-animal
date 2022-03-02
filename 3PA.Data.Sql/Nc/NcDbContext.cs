@@ -9,8 +9,7 @@ namespace _3PA.Data.Sql.Nc
     public DbSet<NcVoter> Voters { get; set; }
     public DbSet<NcHistoryActive> Histories { get; set; }
     public DbSet<NcHistoryOrphan> Orphans { get; set; }
-    public DbSet<Manifest> Manifests { get; set; }
-    protected override string catalog => "PublicRecord.NcVoter";
+    protected override string catalog => "PublicRecord.Voters.Nc";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -9,8 +9,7 @@ namespace _3PA.Data.Sql.Fl
     public DbSet<FlVoter> Voters { get; set; }
     public DbSet<FlHistoryActive> Histories { get; set; }
     public DbSet<FlHistoryOrphan> Orphans { get; set; }
-    public DbSet<Manifest> Manifests { get; set; }
-    protected override string catalog => "PublicRecord.FlVoter";
+    protected override string catalog => "PublicRecord.Voters.Fl";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

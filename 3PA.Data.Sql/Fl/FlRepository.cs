@@ -18,20 +18,7 @@ namespace _3PA.Data.Sql.Fl
 
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] list) => list.Select(v => new FlVoter(v)).ToList();
     public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] list) => list.Select(v => new FlHistoryBase(v)).ToList();
-    public IList<Manifest> GetManifestSummary()
-		{
-      // I'd need to move Manifest Table to the DbContextBase to make this one liner work...
-      //return base.GetManifestSummary(_context);          
-      var summary = new List<Manifest>();
-      if (_context.Database.CanConnect() && _context.Manifests.Any())
-      {
-        foreach (var entry in _context.Manifests)
-        {
-          summary.Add(entry);      		
-        }
-      }      
-      return summary; 
-    }
+    public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
 
     public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords)
     {
@@ -58,7 +45,7 @@ namespace _3PA.Data.Sql.Fl
         {
           t.Skipped++;
         }
-        var updates = t.Validated + t.Orphaned + t.Skipped;
+        var updates = t.Validated + t.Skipped;
         if ((updates > 0) && (updates % 10000 == 0))
         {
           currentSaves = _context.SaveChanges();
@@ -67,16 +54,16 @@ namespace _3PA.Data.Sql.Fl
         }
       }
 
-      updateManifest(fileName);
       currentSaves = _context.SaveChanges();
-      printUpdate( currentSaves, t );
-      Console.WriteLine("FINALIZING UPDATES...");
-      var actualUpdates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, actualUpdates, t.Goal - actualUpdates);
+      printUpdate(currentSaves, t);
+
+      Console.Write("FINALIZING UPDATES...");
+      var results = new Manifest(fileName, t.Validated, t.Orphaned);
+      clearManifest(fileName);
       await _context.Manifests.AddAsync(results);
 
       currentSaves = _context.SaveChanges();
-      Console.WriteLine($"{fileName} has been processed!\n");
+      Console.WriteLine($"{fileName}'s {t.Goal:N0} voters have been processed!\n");
 
       return results;
     }
@@ -96,37 +83,32 @@ namespace _3PA.Data.Sql.Fl
         //Check if this historyBase is new...
         try
         {
-          var existingHistory =
-            _context.Histories.FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).Id) != null;
-
-
-          if (!existingHistory)
+          //Check if this history's voter is recorded...
+          var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).VoterId);
+          if (existingVoter != null)
           {
-            //Check if this historyBase is not an orphan...
-            var existingVoter = _context.Voters
-              .FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).Id);
-            if (existingVoter != null)
+            //...then check if this is already recorded...
+            var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).Id) != null;
+            if (!existingHistory)
             {
               var h = new FlHistoryActive(existingVoter, history as FlHistoryBase);
               await _context.Histories.AddAsync(h);
               t.Validated++;
             }
+          }
+          else
+          {
+            // ...this is an orphan history, so check if it already has been recorded...
+            var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).Id);
+            if (existingOrphan == null)
+            {
+              var h = new FlHistoryOrphan(history as FlHistoryBase);
+              await _context.Orphans.AddAsync(h);
+              t.Orphaned++;
+            }
             else
             {
-              //Check if the orphan is already recorded...
-              var existingOrphan =
-                _context.Orphans.FirstOrDefault(exists => exists.Id == (history as FlHistoryBase).Id);
-
-              if (existingOrphan == null)
-              {
-                var h = new FlHistoryOrphan(history as FlHistoryBase);
-                await _context.Orphans.AddAsync(h);
-                t.Orphaned++;
-              }
-              else
-              {
-                t.Skipped++;
-              }
+              t.Skipped++;
             }
           }
         }
@@ -144,23 +126,22 @@ namespace _3PA.Data.Sql.Fl
         }
 
       }
-
-      updateManifest(fileName);
+ 
       currentSaves = _context.SaveChanges();
       printUpdate( currentSaves, t );
 
-      Console.WriteLine("FINALIZING UPDATES...");
-      var actualUpdates = t.Validated + t.Orphaned;
-      var results = new Manifest(fileName, actualUpdates, t.Goal - actualUpdates);
+      Console.Write("FINALIZING UPDATES...");
+      var results = new Manifest(fileName, t.Validated, t.Orphaned);
+      clearManifest(fileName);
       await _context.Manifests.AddAsync(results);
 
       currentSaves = _context.SaveChanges();
-      Console.WriteLine($"{fileName} has been processed!\n");
+      Console.WriteLine($"{fileName}'s {t.Goal:N0} histories have been processed!\n");
 
       return results;
     }
     
-    void updateManifest(string fileName)
+    void clearManifest(string fileName)
     {
       var manifestExists = _context.Manifests.FirstOrDefault(exists => exists.FileName == fileName);
       if (manifestExists != null)
