@@ -1,4 +1,4 @@
-﻿using _3PA.API.Services.PublicRecords.CountyNameById.Queries;
+using _3PA.API.Services.PublicRecords.CountyNameById.Queries;
 using _3PA.API.Services.PublicRecords.CountyNames.Queries;
 using _3PA.API.Services.PublicRecords.Consumer.Commands;
 using _3PA.API.Services.PublicRecords.Consumer.Queries.GetCountyIdFromFilename;
@@ -118,6 +118,23 @@ namespace _3PA.API.Controllers
       try
       {
         return Ok(await _mediator.Send(new GetManifestSummaryQuery()));
+      }
+      catch (Exception ex)
+      {
+        return BadRequest("Failled to get county data... ex: \n" + ex.Message);
+      }
+    }
+
+    ///<summary>---</summary>
+    ///<param name="usState">Two letter U.S. state identifier (see SupportedUsStates Enum)</param>
+    ///<param name="countyId">Public records' county identifier used in file names.  Could be numbers or letters.</param>
+    ///<param name="surname">Last name of voters to return</param>
+    [HttpGet("Voters/ByName/{usState}/{countyId}/{surname}")]
+    public async Task<ActionResult> GetVotersByName(UsState usState, string countyId, string surname)
+    {
+      try
+      {
+        return Ok(await _mediator.Send(new GetVotersByNameQuery(usState, countyId, surname)));
       }
       catch (Exception ex)
       {
