@@ -6,6 +6,8 @@ using _3PA.API.Services.PublicRecords.ManifestSummary.Queries.GetManifestSummary
 using _3PA.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using _3PA.API.Services.PublicRecords.Voters.Queries.ByName;
+
 namespace _3PA.API.Controllers
 {
 	[Route("api/[Controller]")]

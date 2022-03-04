@@ -140,7 +140,17 @@ namespace _3PA.Data.Sql.Fl
 
       return results;
     }
-    
+
+    public IEnumerable<PublicRecordBase> GetVoters(string countyId, string surname)
+		{
+      var voters = _context.Voters
+        .Where(voter => voter.NameLast== surname)
+        .Include(v => v.Histories)
+        .ToList();
+      return voters;
+		}
+
+
     void clearManifest(string fileName)
     {
       var manifestExists = _context.Manifests.FirstOrDefault(exists => exists.FileName == fileName);
