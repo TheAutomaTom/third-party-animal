@@ -21,60 +21,6 @@ namespace _3PA.Data.Sql.Nc
 
     public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
 
-    private PublicRecordBase ParseLine(string kind, string valuesRaw, string headersRaw)
-    {
-      string[] values = parseText(valuesRaw);
-      string[] headers = parseText(headersRaw);
-      XElement voterXml = new XElement(kind);
-      for (int i = 0; i < headers.Length; i++)
-      {
-        if (values[i] != String.Empty)
-        {
-          voterXml.Add(new XElement(headers[i], values[i]));
-        }
-      }
-
-      using (var stream = streamFromXElement(voterXml))
-      {
-        if (kind == "NcVoter")
-        {
-          var xs = new XmlSerializer(typeof(NcVoter));
-          var v = (NcVoter)xs.Deserialize(stream);
-          v.Id = v.VoterRegNum;
-          return v;
-        } else
-				{
-          var xs = new XmlSerializer(typeof(NcHistoryBase));
-          var h = (NcHistoryBase)xs.Deserialize(stream);
-          h.Id = $"{h.VoterRegistrationNumber}{h.PctLabel}{h.ElectionLable}{h.VotingMethod}";
-          return h;
-        }      
-      }
-
-    }
-
-
-    private Stream streamFromXElement(XElement xml)
-    {
-      var m = new MemoryStream();
-      var w = new StreamWriter(m);
-      w.Write(xml);
-      w.Flush();
-      m.Position = 0;
-      return m;
-    }
-
-    private string[] parseText(string row)
-    {
-      string[] values = row.Split('\t');
-      for (int i = 0; i < values.Length; i++)
-      {
-        values[i] = values[i].Replace("\"", "");
-        values[i] = values[i].Replace("\\", "");
-      }
-      return values;
-    }
-
 
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] raw)
     {
@@ -83,7 +29,7 @@ namespace _3PA.Data.Sql.Nc
       var voters = new List<PublicRecordBase>();
       foreach (var v in list)
 			{
-        var parsed = ParseLine("NcVoter", v, _includedHeaders);
+        var parsed = parseLine("NcVoter", v, _includedHeaders);
         voters.Add(parsed);
       }
       return voters;
@@ -96,7 +42,7 @@ namespace _3PA.Data.Sql.Nc
       var histories = new List<PublicRecordBase>();
       foreach (var h in list)
 			{
-        var parsed = ParseLine("NcHistoryBase", h, _includedHeaders);
+        var parsed = parseLine("NcHistoryBase", h, _includedHeaders);
         histories.Add(parsed);
       }
       return histories;
@@ -228,6 +174,59 @@ namespace _3PA.Data.Sql.Nc
       return voters;
     }
 
+    private PublicRecordBase parseLine(string kind, string valuesRaw, string headersRaw)
+    {
+      string[] values = parseText(valuesRaw);
+      string[] headers = parseText(headersRaw);
+      XElement voterXml = new XElement(kind);
+      for (int i = 0; i < headers.Length; i++)
+      {
+        if (values[i] != String.Empty)
+        {
+          voterXml.Add(new XElement(headers[i], values[i]));
+        }
+      }
+
+      using (var stream = streamFromXElement(voterXml))
+      {
+        if (kind == "NcVoter")
+        {
+          var xs = new XmlSerializer(typeof(NcVoter));
+          var v = (NcVoter)xs.Deserialize(stream);
+          v.Id = v.VoterRegNum;
+          return v;
+        }
+        else
+        {
+          var xs = new XmlSerializer(typeof(NcHistoryBase));
+          var h = (NcHistoryBase)xs.Deserialize(stream);
+          h.Id = $"{h.VoterRegistrationNumber}{h.PctLabel}{h.ElectionLable}{h.VotingMethod}";
+          return h;
+        }
+      }
+
+    }
+            
+    private Stream streamFromXElement(XElement xml)
+    {
+      var m = new MemoryStream();
+      var w = new StreamWriter(m);
+      w.Write(xml);
+      w.Flush();
+      m.Position = 0;
+      return m;
+    }
+
+    private string[] parseText(string row)
+    {
+      string[] values = row.Split('\t');
+      for (int i = 0; i < values.Length; i++)
+      {
+        values[i] = values[i].Replace("\"", "");
+        values[i] = values[i].Replace("\\", "");
+      }
+      return values;
+    }
 
     void clearManifest(string fileName)
     {
