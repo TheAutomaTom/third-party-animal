@@ -1,31 +1,50 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace _3PA.Core.Models.Nc
 {
   public class NcHistoryBase : PublicRecordHistoryBase
   {
+
+    [XmlElement(ElementName = "county_id")]
+    public int? CountyId { get; set; }
+    [XmlElement(ElementName = "county_desc")]
+    public string? CountyDescription { get; set; }
+    // Note this is "VoterRegNum" in NcVoter
+    [XmlElement(ElementName = "voter_reg_num")]
+    public string? VoterRegistrationNumber { get; set; }
+    [XmlElement(ElementName = "election_lbl")]
+    public string? ElectionLable { get; set; }
+    [XmlElement(ElementName = "election_desc")]
+    public string? ElectionDescription { get; set; }
+    [XmlElement(ElementName = "voting_method")]
+    public string? VotingMethod { get; set; }
+    [XmlElement(ElementName = "voted_party_cd")]
+    public string? VotedPartyCd { get; set; }
+    [XmlElement(ElementName = "voted_party_desc")]
+    public string? VotedPartyDescription { get; set; }
+    [XmlElement(ElementName = "pct_label")]
+    public string? PctLabel { get; set; }
+    [XmlElement(ElementName = "pct_description")]
+    public string? PctDescription { get; set; }
+    [XmlElement(ElementName = "ncid")]
+    public string? Ncid { get; set; }
+    [XmlElement(ElementName = "voted_county_id")]
+    public string? VotedCountyId { get; set; }
+    [XmlElement(ElementName = "voted_county_desc")]
+    public string? VotedCounty_Description { get; set; }
+    [XmlElement(ElementName = "vtd_label")]
+    public string? VotedLabel { get; set; }
+    [XmlElement(ElementName = "vtd_description")]
+    public string? VotedDescription { get; set; }
+
+
     #region Concerning EF...
     //foreign key already present in public records entity
     //public string VoterRegistrationNumber { get; set; } 
     public NcHistoryBase() { }
     #endregion ...EF
-    
-    public int CountyId { get; set; }
-    public string CountyDescription { get; set; }
-    // Note this is "VoterRegNum" in NcVoter
-    public string VoterRegistrationNumber { get; set; }
-    public string ElectionLable { get; set; }
-    public string ElectionDescription { get; set; }
-    public string VotingMethod { get; set; }
-    public string VotedPartyCd { get; set; }
-    public string VotedPartyDescription { get; set; }
-    public string PctLabel { get; set; }
-    public string PctDescription { get; set; }
-    public string Ncid { get; set; }
-    public string VotedCountyId { get; set; }
-    public string VotedCounty_Description { get; set; }
-    public string VotedLabel { get; set; }
-    public string VotedDescription { get; set; }
+
     public NcHistoryBase(string row)
     {
       string[] values = row.Split('\t');
