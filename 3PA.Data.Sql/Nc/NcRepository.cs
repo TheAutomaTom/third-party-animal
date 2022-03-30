@@ -4,12 +4,15 @@ using _3PA.Data.Sql.Core;
 using _3PA.Data.Sql.Core.Bases;
 using _3PA.Data.Sql.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace _3PA.Data.Sql.Nc
 {
   public class NcRepository : PublicRecordsRepositoryBase, IPublicRecordsRepository
   {
     NcDbContext _context { get; set; }
+    string _includedHeaders { get; set; }
     public NcRepository()
     {
       _context = new NcDbContext();
@@ -18,20 +21,85 @@ namespace _3PA.Data.Sql.Nc
 
     public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
 
+    private PublicRecordBase ParseLine(string kind, string valuesRaw, string headersRaw)
+    {
+      string[] values = parseText(valuesRaw);
+      string[] headers = parseText(headersRaw);
+      XElement voterXml = new XElement(kind);
+      for (int i = 0; i < headers.Length; i++)
+      {
+        if (values[i] != String.Empty)
+        {
+          voterXml.Add(new XElement(headers[i], values[i]));
+        }
+      }
+
+      using (var stream = streamFromXElement(voterXml))
+      {
+        if (kind == "NcVoter")
+        {
+          var xs = new XmlSerializer(typeof(NcVoter));
+          var v = (NcVoter)xs.Deserialize(stream);
+          v.Id = v.VoterRegNum;
+          return v;
+        } else
+				{
+          var xs = new XmlSerializer(typeof(NcHistoryBase));
+          var h = (NcHistoryBase)xs.Deserialize(stream);
+          h.Id = $"{h.VoterRegistrationNumber}{h.PctLabel}{h.ElectionLable}{h.VotingMethod}";
+          return h;
+        }      
+      }
+
+    }
+
+
+    private Stream streamFromXElement(XElement xml)
+    {
+      var m = new MemoryStream();
+      var w = new StreamWriter(m);
+      w.Write(xml);
+      w.Flush();
+      m.Position = 0;
+      return m;
+    }
+
+    private string[] parseText(string row)
+    {
+      string[] values = row.Split('\t');
+      for (int i = 0; i < values.Length; i++)
+      {
+        values[i] = values[i].Replace("\"", "");
+        values[i] = values[i].Replace("\\", "");
+      }
+      return values;
+    }
+
+
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] raw)
     {
-      var list = sanitizeInput(raw, 1 /*71*/ );
-      return list.Select(v => new NcVoter(v)).ToList();
+      _includedHeaders = raw.First();
+      var list = raw.Skip(1).ToArray();
+      var voters = new List<PublicRecordBase>();
+      foreach (var v in list)
+			{
+        var parsed = ParseLine("NcVoter", v, _includedHeaders);
+        voters.Add(parsed);
+      }
+      return voters;
     }
-      
-    public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] list) =>
-      sanitizeInput(list, 15).Select(v => new NcHistoryBase(v)).ToList();
 
-    string[] sanitizeInput(string[] listWithHeaders, int headerCount)
+    public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] raw)
     {
-      var withoutHeaders = listWithHeaders.Skip(headerCount).ToArray();
-      var withoutQuotes = withoutHeaders.Select(s => s.Replace("\"","")).ToArray();
-      return withoutQuotes;
+      _includedHeaders = raw.First();
+      var list = raw.Skip(1).ToArray();
+      var histories = new List<PublicRecordBase>();
+      foreach (var h in list)
+			{
+        var parsed = ParseLine("NcHistoryBase", h, _includedHeaders);
+        histories.Add(parsed);
+      }
+      return histories;
     }
 
     public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords) 
@@ -110,8 +178,16 @@ namespace _3PA.Data.Sql.Nc
           if (existingOrphan == null)
           {
             var h = new NcHistoryOrphan(history as NcHistoryBase);
-            await _context.Orphans.AddAsync(h);
-            t.Orphaned++;
+            try
+            {
+              await _context.Orphans.AddAsync(h);
+              t.Orphaned++;
+            }
+            catch(Exception ex)
+						{
+              Console.WriteLine($"Orphan already tracked( {h.Id} ).");
+              Console.WriteLine(ex.Message);
+						}
           }
           else
           {
