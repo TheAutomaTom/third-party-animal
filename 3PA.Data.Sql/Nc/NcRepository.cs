@@ -1,4 +1,4 @@
-﻿using _3PA.Core.Models;
+using _3PA.Core.Models;
 using _3PA.Core.Models.Nc;
 using _3PA.Data.Sql.Core;
 using _3PA.Data.Sql.Core.Bases;
@@ -63,7 +63,7 @@ namespace _3PA.Data.Sql.Nc
         var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter)!.Id);
         if (existingId == null)
         {
-          var x = _context.Voters.EntityType;
+          //_context.Voters.Add((voter as NcVoter)!);
 
           _context.Voters.Add((voter as NcVoter)!);
           t.Validated++;
