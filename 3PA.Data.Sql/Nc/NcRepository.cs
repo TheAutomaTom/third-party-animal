@@ -174,7 +174,7 @@ namespace _3PA.Data.Sql.Nc
       return voters;
     }
 
-    private PublicRecordBase parseLine(string kind, string valuesRaw, string headersRaw)
+    PublicRecordBase parseLine(string kind, string valuesRaw, string headersRaw)
     {
       string[] values = parseText(valuesRaw);
       string[] headers = parseText(headersRaw);
@@ -206,18 +206,8 @@ namespace _3PA.Data.Sql.Nc
       }
 
     }
-            
-    private Stream streamFromXElement(XElement xml)
-    {
-      var m = new MemoryStream();
-      var w = new StreamWriter(m);
-      w.Write(xml);
-      w.Flush();
-      m.Position = 0;
-      return m;
-    }
 
-    private string[] parseText(string row)
+    string[] parseText(string row)
     {
       string[] values = row.Split('\t');
       for (int i = 0; i < values.Length; i++)
@@ -226,6 +216,16 @@ namespace _3PA.Data.Sql.Nc
         values[i] = values[i].Replace("\\", "");
       }
       return values;
+    }
+
+    Stream streamFromXElement(XElement xml)
+    {
+      var m = new MemoryStream();
+      var w = new StreamWriter(m);
+      w.Write(xml);
+      w.Flush();
+      m.Position = 0;
+      return m;
     }
 
     void clearManifest(string fileName)
