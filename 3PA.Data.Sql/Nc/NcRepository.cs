@@ -16,10 +16,11 @@ namespace _3PA.Data.Sql.Nc
     public NcRepository()
     {
       _context = new NcDbContext();
-      _context.Database.EnsureCreated();
+			_context.Database.EnsureCreated();
+      _includedHeaders = "";
     }
 
-    public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
+		public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
 
 
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] raw)
@@ -59,12 +60,12 @@ namespace _3PA.Data.Sql.Nc
 
       foreach (var voter in publicRecords)
       {
-        var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter).Id);
+        var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter)!.Id);
         if (existingId == null)
         {
           var x = _context.Voters.EntityType;
 
-          _context.Voters.Add(voter as NcVoter);
+          _context.Voters.Add((voter as NcVoter)!);
           t.Validated++;
 
           var updates = t.Validated + t.Skipped;
@@ -107,23 +108,23 @@ namespace _3PA.Data.Sql.Nc
       foreach (var history in publicRecords)
       {
         //Check if this history's voter is recorded...
-        var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).VoterRegistrationNumber);
+        var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.VoterRegistrationNumber);
         if(existingVoter != null)
 				{
           //...then check if this is already recorded...
-          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id) != null;
+          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id) != null;
           if(!existingHistory)
 					{
-            var h = new NcHistoryActive(existingVoter, history as NcHistoryBase);
+            var h = new NcHistoryActive(existingVoter, (history as NcHistoryBase)!);
             await _context.Histories.AddAsync(h);
             t.Validated++;            
           }        
         } else {
           // ...this is an orphan history, so check if it already has been recorded...
-          var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
+          var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id);
           if (existingOrphan == null)
           {
-            var h = new NcHistoryOrphan(history as NcHistoryBase);
+            var h = new NcHistoryOrphan((history as NcHistoryBase)!);
             try
             {
               await _context.Orphans.AddAsync(h);
@@ -193,21 +194,22 @@ namespace _3PA.Data.Sql.Nc
         {
           var xs = new XmlSerializer(typeof(NcVoter));
           var v = (NcVoter)xs.Deserialize(stream);
-          v.Id = v.VoterRegNum;
+          v!.Id = v.VoterRegNum!;
           return v;
         }
         else
         {
           var xs = new XmlSerializer(typeof(NcHistoryBase));
           var h = (NcHistoryBase)xs.Deserialize(stream);
-          h.Id = $"{h.VoterRegistrationNumber}{h.PctLabel}{h.ElectionLable}{h.VotingMethod}";
+          h!.Id = $"{h.VoterRegistrationNumber}{h.PctLabel}{h.ElectionLable}{h.VotingMethod}";
           return h;
         }
       }
 
     }
 
-    string[] parseText(string row)
+		#region Support Methods...
+		string[] parseText(string row)
     {
       string[] values = row.Split('\t');
       for (int i = 0; i < values.Length; i++)
@@ -236,7 +238,7 @@ namespace _3PA.Data.Sql.Nc
         _context.Entry(manifestExists).State = EntityState.Deleted;
       }
     }
-
+    #endregion ...support methods
 
   }
 }
