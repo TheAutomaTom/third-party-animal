@@ -1,6 +1,6 @@
 ﻿namespace _3PA.Core.Models.Nc
 {
-  public class NcGeoData : IGeoData
+  public class NcGeoData : GeoData
   {
     public override char Delimiter => '\t';    
     public override string FileSuffix => ".txt";
@@ -111,6 +111,15 @@
         {"99", "YADKIN"},
         {"100", "YANCEY"}
       };
-    }
-  }
 
+    public override IDictionary<string, string> RegisterableParties
+      => new Dictionary<string, string>
+      {
+        {"UNA","UNAFFILIATED" },
+        {"DEM","DEMOCRAT" },
+        {"REP","REPUBLICAN" },
+        {"LIB","LIBERTARIAN" },
+
+      };
+  }
+}

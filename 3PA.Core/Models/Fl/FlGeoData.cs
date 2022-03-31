@@ -1,13 +1,13 @@
 ﻿namespace _3PA.Core.Models.Fl
 {
-  public class FlGeoData : IGeoData
+  public class FlGeoData : GeoData
   {
     public override char Delimiter => '\t';
     public override string FileSuffix => ".txt";
     public override int CountyIdStartPosition => 1;
     public override int CountyIdMaxLength => 3;
-    public override bool KeyIsInt => false; 
-    public override IDictionary<string, string> CountyIds 
+    public override bool KeyIsInt => false;
+    public override IDictionary<string, string> CountyIds
       => new Dictionary<string, string>
       {
         {"ALA","Alachua"},
@@ -79,7 +79,21 @@
         {"OKA","Okaloosa"}
       };
 
-
+    public override IDictionary<string, string> RegisterableParties
+      => new Dictionary<string, string>
+      {
+        {"CPF","Constitution Party of Florida" },
+        {"DEM","Florida Democratic Party" },
+        {"ECO","Ecology Party of Florida" },
+        {"GRE","Green Party of Florida" },
+        {"IND","Independent Party of Florida" },
+        {"LPF","Libertarian Party of Florida" },
+        {"NPA","No Party Affiliation" },
+        {"PSL","Party for Socialism and Liberation - Florida" },
+        {"PEO","People’s Party" },
+        {"REF","Reform Party of Florida" },
+        {"REP","Republican Party of Florida" },
+        {"UPF","Unity Party of Florida" }
+      };
   }
 }
-

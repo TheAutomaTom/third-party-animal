@@ -11,6 +11,7 @@ namespace _3PA.Data.Sql.Core.Interfaces
     public Task<Manifest> CommitHistoryRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords);
 
     public IList<Manifest> GetManifestSummary();
+    public IEnumerable<PublicRecordBase> GetVoters(string countyId, string surname);
 
   }
 }

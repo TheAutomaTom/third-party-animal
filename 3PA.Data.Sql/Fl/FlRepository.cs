@@ -1,4 +1,4 @@
-﻿using _3PA.Core.Models;
+using _3PA.Core.Models;
 using _3PA.Core.Models.Fl;
 using _3PA.Data.Sql.Core;
 using _3PA.Data.Sql.Core.Bases;
@@ -35,7 +35,6 @@ namespace _3PA.Data.Sql.Fl
         var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as FlVoter).Id);
         if (existingId == null)
         {
-          var x = _context.Voters.EntityType;
 
           _context.Voters.Add(voter as FlVoter);
           t.Validated++;
@@ -140,7 +139,17 @@ namespace _3PA.Data.Sql.Fl
 
       return results;
     }
-    
+
+    public IEnumerable<PublicRecordBase> GetVoters(string countyId, string surname)
+		{
+      var voters = _context.Voters
+        .Where(voter => voter.NameLast== surname)
+        .Include(v => v.Histories)
+        .ToList();
+      return voters;
+		}
+
+
     void clearManifest(string fileName)
     {
       var manifestExists = _context.Manifests.FirstOrDefault(exists => exists.FileName == fileName);

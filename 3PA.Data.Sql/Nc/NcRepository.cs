@@ -1,40 +1,56 @@
-﻿using _3PA.Core.Models;
+using _3PA.Core.Models;
 using _3PA.Core.Models.Nc;
 using _3PA.Data.Sql.Core;
 using _3PA.Data.Sql.Core.Bases;
 using _3PA.Data.Sql.Core.Interfaces;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace _3PA.Data.Sql.Nc
 {
   public class NcRepository : PublicRecordsRepositoryBase, IPublicRecordsRepository
   {
     NcDbContext _context { get; set; }
+    string _includedHeaders { get; set; }
     public NcRepository()
     {
       _context = new NcDbContext();
-      _context.Database.EnsureCreated();
+			_context.Database.EnsureCreated();
+      _includedHeaders = "";
     }
 
-    public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
+		public IList<Manifest> GetManifestSummary() => getManifestSummary(_context);
+
 
     public IEnumerable<PublicRecordBase> ReadVoterRecords(string[] raw)
     {
-      var list = sanitizeInput(raw, 1 /*71*/ );
-      return list.Select(v => new NcVoter(v)).ToList();
+      _includedHeaders = raw.First();
+      var list = raw.Skip(1).ToArray();
+      var voters = new List<PublicRecordBase>();
+      foreach (var v in list)
+			{
+        var parsed = parseLine("NcVoter", v, _includedHeaders);
+        voters.Add(parsed);
+      }
+      return voters;
     }
-      
-    public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] list) =>
-      sanitizeInput(list, 15).Select(v => new NcHistoryBase(v)).ToList();
 
-    string[] sanitizeInput(string[] listWithHeaders, int headerCount)
+    public IEnumerable<PublicRecordBase> ReadHistoryRecords(string[] raw)
     {
-      var withoutHeaders = listWithHeaders.Skip(headerCount).ToArray();
-      var withoutQuotes = withoutHeaders.Select(s => s.Replace("\"","")).ToArray();
-      return withoutQuotes;
+      _includedHeaders = raw.First();
+      var list = raw.Skip(1).ToArray();
+      var histories = new List<PublicRecordBase>();
+      foreach (var h in list)
+			{
+        var parsed = parseLine("NcHistoryBase", h, _includedHeaders);
+        histories.Add(parsed);
+      }
+      return histories;
     }
 
-    public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords) 
+    public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords)
     {
       if (fileName == "" || !publicRecords.Any()) return new Manifest(fileName, 0, 0);
 
@@ -45,12 +61,11 @@ namespace _3PA.Data.Sql.Nc
 
       foreach (var voter in publicRecords)
       {
-        var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter).Id);
+        var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter)!.Id);
         if (existingId == null)
         {
-          var x = _context.Voters.EntityType;
-
-          _context.Voters.Add(voter as NcVoter);
+          _context.Voters.Add((voter as NcVoter)!);
+          //_context.Voters.Update((voter as NcVoter)!);
           t.Validated++;
 
           var updates = t.Validated + t.Skipped;
@@ -90,57 +105,180 @@ namespace _3PA.Data.Sql.Nc
       var t = new Tally(publicRecords.Count());
       printHeaders(t.Goal);
 
+      var bulkActives = new List<NcHistoryActive>();
+      var bulkOrphans = new List<NcHistoryBase>();
+
       foreach (var history in publicRecords)
       {
         //Check if this history's voter is recorded...
-        var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).VoterRegistrationNumber);
-        if(existingVoter != null)
-				{
+        var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.VoterRegistrationNumber);
+        if (existingVoter != null)
+        {
           //...then check if this is already recorded...
-          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id) != null;
-          if(!existingHistory)
-					{
-            var h = new NcHistoryActive(existingVoter, history as NcHistoryBase);
-            await _context.Histories.AddAsync(h);
-            t.Validated++;            
-          }        
-        } else {
+          //var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id) != null;
+          //var existingHistory = await _context.Histories.AnyAsync(exists => exists.Id == (history as NcHistoryBase)!.Id);
+          //if (!existingHistory)
+          //{
+          var h = new NcHistoryActive(existingVoter, (history as NcHistoryBase)!);
+          //await _context.Histories.AddAsync(h);            
+          bulkActives.Add(h);
+          t.Validated++;
+          //}        
+        }
+        else if (!_context.Orphans.Any(exists => exists.Id == (history as NcHistoryBase)!.Id)){
           // ...this is an orphan history, so check if it already has been recorded...
-          var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase).Id);
-          if (existingOrphan == null)
+          //var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id);
+          //var existingOrphan = await _context.Orphans.AnyAsync(exists => exists.Id == (history as NcHistoryBase)!.Id);
+          //if (!existingOrphan)
+          //{
+          var h = new NcHistoryOrphan((history as NcHistoryBase)!);
+          try
           {
-            var h = new NcHistoryOrphan(history as NcHistoryBase);
-            await _context.Orphans.AddAsync(h);
+            //await _context.Orphans.AddAsync(h);
+            bulkOrphans.Add(h);
             t.Orphaned++;
           }
-          else
+          catch (Exception ex)
           {
-            t.Skipped++;
+            Console.WriteLine($"Orphan already tracked( {h.Id} ).");
+            Console.WriteLine(ex.Message);
           }
         }
-
-        var updates = t.Validated + t.Orphaned + t.Skipped;
-        if ((updates > 0) && (updates % 10000 == 0))
+        else
         {
-          currentSaves = _context.SaveChanges();
+          t.Skipped++;
+        }
+      
+        //var updates = t.Validated + t.Orphaned;
+        var updates = t.Validated + t.Orphaned;
+        if ((updates + t.Skipped) % 10_000 == 0)
+        {
+					//if (updates > 0)
+					//{
+					//  currentSaves = _context.SaveChanges();
+					//}
+					if (bulkActives.Any())
+          {
+            var toSave = bulkActives.DistinctBy(h => h.Id).ToList();
+            _context.BulkInsertOrUpdate(toSave);
+            currentSaves += bulkActives.Count();
+            bulkActives.Clear();
+          }
+					if (bulkOrphans.Any())
+          {
+            var toSave = bulkOrphans.DistinctBy(h => h.Id).ToList();
+            _context.BulkInsertOrUpdate(toSave);
+            currentSaves += bulkOrphans.Count();
+            bulkOrphans.Clear();
+          }          
           printUpdate(currentSaves, t);
           t.UpdateTime.Restart();
-        }
+        }        
+      
+      } //...end foreach history
 
+      //currentSaves = _context.SaveChanges();
+      if (bulkActives.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkActives.Distinct().ToList());
+        currentSaves += bulkActives.Count();
+        bulkActives.Clear();
       }
-
-      currentSaves = _context.SaveChanges();
+      if (bulkOrphans.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkOrphans);
+        currentSaves += bulkOrphans.Count();
+        bulkOrphans.Clear();
+      }
       printUpdate(currentSaves, t);
+      currentSaves = 0;
 
       Console.Write("FINALIZING UPDATES...");
       var results = new Manifest(fileName, t.Validated, t.Orphaned);
       clearManifest(fileName);
       await _context.Manifests.AddAsync(results);
 
-      currentSaves = _context.SaveChanges();
+      //currentSaves = _context.SaveChanges();
+      if (bulkActives.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkActives.Distinct().ToList());
+        currentSaves += bulkActives.Count();
+        bulkActives.Clear();
+      }
+      if (bulkOrphans.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkOrphans);
+        currentSaves += bulkOrphans.Count();
+        bulkOrphans.Clear();
+      }
+      currentSaves = 0;
       Console.WriteLine($"{fileName}'s {t.Goal:N0} histories have been processed!\n");
 
       return results;
+    }
+
+    public IEnumerable<PublicRecordBase> GetVoters(string countyId, string surname)
+    {
+      var voters = _context.Voters
+        .Where(voter => voter.LastName == surname)
+        .Include(v => v.Histories)
+        .ToList();
+      return voters;
+    }
+
+    PublicRecordBase parseLine(string kind, string valuesRaw, string headersRaw)
+    {
+      string[] values = parseText(valuesRaw);
+      string[] headers = parseText(headersRaw);
+      XElement voterXml = new XElement(kind);
+      for (int i = 0; i < headers.Length; i++)
+      {
+        if (values[i] != String.Empty)
+        {
+          voterXml.Add(new XElement(headers[i], values[i]));
+        }
+      }
+
+      using (var stream = streamFromXElement(voterXml))
+      {
+        if (kind == "NcVoter")
+        {
+          var xs = new XmlSerializer(typeof(NcVoter));
+          var v = (NcVoter)xs.Deserialize(stream);
+          v!.Id = v.VoterRegNum!;
+          return v;
+        }
+        else
+        {
+          var xs = new XmlSerializer(typeof(NcHistoryBase));
+          var h = (NcHistoryBase)xs.Deserialize(stream);
+          h!.Id = $"{h.VoterRegistrationNumber}{h.PctLabel}{h.ElectionLable}{h.VotingMethod}";
+          return h;
+        }
+      }
+
+    }
+
+		#region Support Methods...
+		string[] parseText(string row)
+    {
+      string[] values = row.Split('\t');
+      for (int i = 0; i < values.Length; i++)
+      {
+        values[i] = values[i].Replace("\"", "");
+        values[i] = values[i].Replace("\\", "");
+      }
+      return values;
+    }
+
+    Stream streamFromXElement(XElement xml)
+    {
+      var m = new MemoryStream();
+      var w = new StreamWriter(m);
+      w.Write(xml);
+      w.Flush();
+      m.Position = 0;
+      return m;
     }
 
     void clearManifest(string fileName)
@@ -151,7 +289,7 @@ namespace _3PA.Data.Sql.Nc
         _context.Entry(manifestExists).State = EntityState.Deleted;
       }
     }
-
+    #endregion ...support methods
 
   }
 }

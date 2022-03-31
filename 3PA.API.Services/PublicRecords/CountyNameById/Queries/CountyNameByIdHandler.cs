@@ -6,7 +6,7 @@ namespace _3PA.API.Services.PublicRecords.CountyNameById.Queries
 {
 	public class CountyNameByIdHandler : IRequestHandler<CountyNameByIdQuery, CountyNameByIdResponse>
   {
-    IGeoData geoData { get; set; }
+    GeoData geoData { get; set; }
     public async Task<CountyNameByIdResponse> Handle(CountyNameByIdQuery request, CancellationToken cancellationToken)
     {
       switch (request.UsState)
