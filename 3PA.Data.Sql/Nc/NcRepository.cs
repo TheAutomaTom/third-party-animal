@@ -3,6 +3,7 @@ using _3PA.Core.Models.Nc;
 using _3PA.Data.Sql.Core;
 using _3PA.Data.Sql.Core.Bases;
 using _3PA.Data.Sql.Core.Interfaces;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -49,7 +50,7 @@ namespace _3PA.Data.Sql.Nc
       return histories;
     }
 
-    public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords) 
+    public async Task<Manifest> CommitVoterRecords(string fileName, IEnumerable<PublicRecordBase> publicRecords)
     {
       if (fileName == "" || !publicRecords.Any()) return new Manifest(fileName, 0, 0);
 
@@ -63,9 +64,8 @@ namespace _3PA.Data.Sql.Nc
         var existingId = _context.Voters.FirstOrDefault(exists => exists.Id == (voter as NcVoter)!.Id);
         if (existingId == null)
         {
-          //_context.Voters.Add((voter as NcVoter)!);
-
           _context.Voters.Add((voter as NcVoter)!);
+          //_context.Voters.Update((voter as NcVoter)!);
           t.Validated++;
 
           var updates = t.Validated + t.Skipped;
@@ -105,62 +105,113 @@ namespace _3PA.Data.Sql.Nc
       var t = new Tally(publicRecords.Count());
       printHeaders(t.Goal);
 
+      var bulkActives = new List<NcHistoryActive>();
+      var bulkOrphans = new List<NcHistoryBase>();
+
       foreach (var history in publicRecords)
       {
         //Check if this history's voter is recorded...
         var existingVoter = _context.Voters.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.VoterRegistrationNumber);
-        if(existingVoter != null)
-				{
+        if (existingVoter != null)
+        {
           //...then check if this is already recorded...
-          var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id) != null;
-          if(!existingHistory)
-					{
-            var h = new NcHistoryActive(existingVoter, (history as NcHistoryBase)!);
-            await _context.Histories.AddAsync(h);
-            t.Validated++;            
-          }        
-        } else {
+          //var existingHistory = _context.Histories.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id) != null;
+          //var existingHistory = await _context.Histories.AnyAsync(exists => exists.Id == (history as NcHistoryBase)!.Id);
+          //if (!existingHistory)
+          //{
+          var h = new NcHistoryActive(existingVoter, (history as NcHistoryBase)!);
+          //await _context.Histories.AddAsync(h);            
+          bulkActives.Add(h);
+          t.Validated++;
+          //}        
+        }
+        else if (!_context.Orphans.Any(exists => exists.Id == (history as NcHistoryBase)!.Id)){
           // ...this is an orphan history, so check if it already has been recorded...
-          var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id);
-          if (existingOrphan == null)
+          //var existingOrphan = _context.Orphans.FirstOrDefault(exists => exists.Id == (history as NcHistoryBase)!.Id);
+          //var existingOrphan = await _context.Orphans.AnyAsync(exists => exists.Id == (history as NcHistoryBase)!.Id);
+          //if (!existingOrphan)
+          //{
+          var h = new NcHistoryOrphan((history as NcHistoryBase)!);
+          try
           {
-            var h = new NcHistoryOrphan((history as NcHistoryBase)!);
-            try
-            {
-              await _context.Orphans.AddAsync(h);
-              t.Orphaned++;
-            }
-            catch(Exception ex)
-						{
-              Console.WriteLine($"Orphan already tracked( {h.Id} ).");
-              Console.WriteLine(ex.Message);
-						}
+            //await _context.Orphans.AddAsync(h);
+            bulkOrphans.Add(h);
+            t.Orphaned++;
           }
-          else
+          catch (Exception ex)
           {
-            t.Skipped++;
+            Console.WriteLine($"Orphan already tracked( {h.Id} ).");
+            Console.WriteLine(ex.Message);
           }
         }
-
-        var updates = t.Validated + t.Orphaned + t.Skipped;
-        if ((updates > 0) && (updates % 10000 == 0))
+        else
         {
-          currentSaves = _context.SaveChanges();
+          t.Skipped++;
+        }
+      
+        //var updates = t.Validated + t.Orphaned;
+        var updates = t.Validated + t.Orphaned;
+        if ((updates + t.Skipped) % 10_000 == 0)
+        {
+					//if (updates > 0)
+					//{
+					//  currentSaves = _context.SaveChanges();
+					//}
+					if (bulkActives.Any())
+          {
+            var toSave = bulkActives.DistinctBy(h => h.Id).ToList();
+            _context.BulkInsertOrUpdate(toSave);
+            currentSaves += bulkActives.Count();
+            bulkActives.Clear();
+          }
+					if (bulkOrphans.Any())
+          {
+            var toSave = bulkOrphans.DistinctBy(h => h.Id).ToList();
+            _context.BulkInsertOrUpdate(toSave);
+            currentSaves += bulkOrphans.Count();
+            bulkOrphans.Clear();
+          }          
           printUpdate(currentSaves, t);
           t.UpdateTime.Restart();
-        }
+        }        
+      
+      } //...end foreach history
 
+      //currentSaves = _context.SaveChanges();
+      if (bulkActives.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkActives.Distinct().ToList());
+        currentSaves += bulkActives.Count();
+        bulkActives.Clear();
       }
-
-      currentSaves = _context.SaveChanges();
+      if (bulkOrphans.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkOrphans);
+        currentSaves += bulkOrphans.Count();
+        bulkOrphans.Clear();
+      }
       printUpdate(currentSaves, t);
+      currentSaves = 0;
 
       Console.Write("FINALIZING UPDATES...");
       var results = new Manifest(fileName, t.Validated, t.Orphaned);
       clearManifest(fileName);
       await _context.Manifests.AddAsync(results);
 
-      currentSaves = _context.SaveChanges();
+      //currentSaves = _context.SaveChanges();
+      if (bulkActives.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkActives.Distinct().ToList());
+        currentSaves += bulkActives.Count();
+        bulkActives.Clear();
+      }
+      if (bulkOrphans.Any())
+      {
+        _context.BulkInsertOrUpdate(bulkOrphans);
+        currentSaves += bulkOrphans.Count();
+        bulkOrphans.Clear();
+      }
+      currentSaves = 0;
       Console.WriteLine($"{fileName}'s {t.Goal:N0} histories have been processed!\n");
 
       return results;
